@@ -1,0 +1,40 @@
+{
+  "folders": [
+    {
+      "id": "2024",
+      "name": "2024",
+      "tracks": [
+        {
+          "filename": "Project_1.mp3",
+          "title": "Project_1",
+          "audioPath": "music/2024/Project_1.mp3",
+          "isFavorite": false
+        }
+      ]
+    },
+    {
+      "id": "2025",
+      "name": "2025",
+      "tracks": [
+        {
+          "filename": "Project_60.mp3",
+          "title": "Project_60",
+          "audioPath": "music/2025/Project_60.mp3",
+          "isFavorite": false
+        }
+      ]
+    },
+    {
+      "id": "2026",
+      "name": "2026",
+      "tracks": [
+        {
+          "filename": "Project_170.mp3",
+          "title": "Project_170",
+          "audioPath": "music/2026/Project_170.mp3",
+          "isFavorite": false
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,46 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Huebloom</title>
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <main class="app-shell">
+      <header class="library-header">
+        <div>
+          <p class="eyebrow">Music library</p>
+          <h1>Huebloom</h1>
+        </div>
+        <p id="library-status" class="library-status" role="status" aria-live="polite"></p>
+      </header>
+
+      <section class="library-layout" aria-label="Music library">
+        <aside class="folder-panel" aria-labelledby="folders-heading">
+          <h2 id="folders-heading">Folders</h2>
+          <nav id="folder-list" class="folder-list" aria-label="Library folders"></nav>
+        </aside>
+
+        <section class="track-panel" aria-labelledby="tracks-heading">
+          <div class="track-panel-header">
+            <h2 id="tracks-heading">Tracks</h2>
+            <p id="track-count" class="track-count"></p>
+          </div>
+          <div id="track-list" class="track-list"></div>
+        </section>
+      </section>
+
+      <section class="player-panel" aria-labelledby="now-playing-heading">
+        <div class="player-heading">
+          <p class="eyebrow">Now playing</p>
+          <h2 id="now-playing-heading">No track selected</h2>
+        </div>
+        <audio id="audio-player" controls preload="metadata"></audio>
+      </section>
+    </main>
+
+    <script src="./config.js"></script>
+    <script src="./app.js"></script>
+  </body>
+</html>

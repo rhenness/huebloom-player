@@ -1,0 +1,28 @@
+{
+  "name": "huebloom",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "build": "npm run build:library && npm run build:site",
+    "build:library": "tsx scanner/scan.ts",
+    "build:site": "tsx scanner/stage-site.ts",
+    "scan:check": "tsx scanner/scan.ts --check",
+    "start": "http-server . -c-1",
+    "test": "jest",
+    "typecheck": "tsc --noEmit"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "devDependencies": {
+    "@types/jest": "^30.0.0",
+    "@types/node": "^26.1.1",
+    "http-server": "^14.1.1",
+    "jest": "^30.4.2",
+    "ts-jest": "^29.4.12",
+    "tsx": "^4.23.1",
+    "typescript": "^6.0.3"
+  }
+}
