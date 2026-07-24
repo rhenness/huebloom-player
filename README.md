@@ -2,7 +2,8 @@
 
 Huebloom is a static browser music library. It reads a generated
 [`library.json`](library.json) catalog, presents the music folders and tracks in
-the browser, and plays selected MP3 files with the native audio controls.
+the browser, and plays selected MP3 and WAV files with the native audio
+controls.
 
 ## Quick Start
 
@@ -35,20 +36,20 @@ because the player fetches the manifest and audio files.
 
 ## Music Layout
 
-Place MP3 files one directory below `music/`:
+Place MP3 or WAV files one directory below `music/`:
 
 ```text
 music/
   2024/
     Project_1.mp3
   2025/
-    Project_60.mp3
+    Project_60.wav
 ```
 
 Each direct child directory of `music/` becomes one library folder. The scanner
-includes only direct `.mp3` files inside those folders, case-insensitively.
-It ignores root-level audio files, nested files and directories, non-MP3 files,
-and folders with no eligible tracks.
+includes only direct `.mp3` and `.wav` files inside those folders,
+case-insensitively. It ignores root-level audio files, nested files and
+directories, unsupported file types, and folders with no eligible tracks.
 
 ## Catalog Rules
 
@@ -56,20 +57,20 @@ The scanner writes this shape to `library.json`:
 
 ```json
 {
-  "folders": [
-    {
-      "id": "2024",
-      "name": "2024",
-      "tracks": [
+    "folders": [
         {
-          "filename": "Project_1.mp3",
-          "title": "Project_1",
-          "audioPath": "music/2024/Project_1.mp3",
-          "isFavorite": false
+            "id": "2024",
+            "name": "2024",
+            "tracks": [
+                {
+                    "filename": "Project_1.mp3",
+                    "title": "Project_1",
+                    "audioPath": "music/2024/Project_1.mp3",
+                    "isFavorite": false
+                }
+            ]
         }
-      ]
-    }
-  ]
+    ]
 }
 ```
 

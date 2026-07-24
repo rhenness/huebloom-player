@@ -34,8 +34,11 @@ button {
 
 .app-shell {
   width: min(1120px, 100%);
-  min-height: 100vh;
+  height: 100vh;
+  height: 100dvh;
   margin: 0 auto;
+  display: flex;
+  flex-direction: column;
   padding: 48px 32px 32px;
 }
 
@@ -95,6 +98,8 @@ h2 {
 
 .library-layout {
   display: grid;
+  flex: 1 1 auto;
+  min-height: 0;
   grid-template-columns: minmax(190px, 0.8fr) minmax(0, 2.2fr);
   border-top: 2px solid #173f39;
   border-bottom: 1px solid rgba(23, 63, 57, 0.34);
@@ -102,7 +107,9 @@ h2 {
 
 .folder-panel,
 .track-panel {
-  min-height: 390px;
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
   padding: 20px;
 }
 
@@ -114,8 +121,17 @@ h2 {
 .folder-list,
 .track-list {
   display: grid;
+  flex: 1 1 auto;
   gap: 7px;
   margin-top: 18px;
+  min-height: 0;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  scrollbar-gutter: stable;
+}
+
+.folder-list {
+  align-content: start;
 }
 
 .folder-button,
@@ -232,6 +248,7 @@ h2 {
 
 .player-panel {
   display: grid;
+  flex: 0 0 auto;
   grid-template-columns: minmax(0, 1fr) minmax(280px, 1.1fr);
   align-items: center;
   gap: 24px;
@@ -270,10 +287,11 @@ audio {
 
   .library-layout {
     grid-template-columns: 1fr;
+    grid-template-rows: minmax(0, 0.8fr) minmax(0, 1.2fr);
   }
 
   .folder-panel {
-    min-height: auto;
+    min-height: 0;
     border-right: 0;
     border-bottom: 1px solid rgba(23, 63, 57, 0.34);
   }

@@ -1,13 +1,553 @@
 {
   "folders": [
     {
+      "id": "2023",
+      "name": "2023",
+      "tracks": [
+        {
+          "filename": "prev1.mp3",
+          "title": "prev1",
+          "audioPath": "music/2023/prev1.mp3",
+          "isFavorite": false
+        },
+        {
+          "filename": "prev2.mp3",
+          "title": "prev2",
+          "audioPath": "music/2023/prev2.mp3",
+          "isFavorite": false
+        },
+        {
+          "filename": "prev3.mp3",
+          "title": "prev3",
+          "audioPath": "music/2023/prev3.mp3",
+          "isFavorite": false
+        },
+        {
+          "filename": "prev4.mp3",
+          "title": "prev4",
+          "audioPath": "music/2023/prev4.mp3",
+          "isFavorite": false
+        },
+        {
+          "filename": "prev5.mp3",
+          "title": "prev5",
+          "audioPath": "music/2023/prev5.mp3",
+          "isFavorite": false
+        },
+        {
+          "filename": "prev6.mp3",
+          "title": "prev6",
+          "audioPath": "music/2023/prev6.mp3",
+          "isFavorite": false
+        },
+        {
+          "filename": "prev7.mp3",
+          "title": "prev7",
+          "audioPath": "music/2023/prev7.mp3",
+          "isFavorite": false
+        },
+        {
+          "filename": "prev8.mp3",
+          "title": "prev8",
+          "audioPath": "music/2023/prev8.mp3",
+          "isFavorite": false
+        },
+        {
+          "filename": "prev9.mp3",
+          "title": "prev9",
+          "audioPath": "music/2023/prev9.mp3",
+          "isFavorite": false
+        },
+        {
+          "filename": "prev10.mp3",
+          "title": "prev10",
+          "audioPath": "music/2023/prev10.mp3",
+          "isFavorite": false
+        },
+        {
+          "filename": "prev12.mp3",
+          "title": "prev12",
+          "audioPath": "music/2023/prev12.mp3",
+          "isFavorite": false
+        },
+        {
+          "filename": "prev14.mp3",
+          "title": "prev14",
+          "audioPath": "music/2023/prev14.mp3",
+          "isFavorite": false
+        },
+        {
+          "filename": "prev15.mp3",
+          "title": "prev15",
+          "audioPath": "music/2023/prev15.mp3",
+          "isFavorite": false
+        },
+        {
+          "filename": "prev16.mp3",
+          "title": "prev16",
+          "audioPath": "music/2023/prev16.mp3",
+          "isFavorite": false
+        },
+        {
+          "filename": "prev17.mp3",
+          "title": "prev17",
+          "audioPath": "music/2023/prev17.mp3",
+          "isFavorite": false
+        },
+        {
+          "filename": "prev18.mp3",
+          "title": "prev18",
+          "audioPath": "music/2023/prev18.mp3",
+          "isFavorite": false
+        },
+        {
+          "filename": "prev19.mp3",
+          "title": "prev19",
+          "audioPath": "music/2023/prev19.mp3",
+          "isFavorite": false
+        },
+        {
+          "filename": "prev20.mp3",
+          "title": "prev20",
+          "audioPath": "music/2023/prev20.mp3",
+          "isFavorite": false
+        }
+      ]
+    },
+    {
       "id": "2024",
       "name": "2024",
       "tracks": [
         {
-          "filename": "Project_1.mp3",
-          "title": "Project_1",
-          "audioPath": "music/2024/Project_1.mp3",
+          "filename": "46.mp3",
+          "title": "46",
+          "audioPath": "music/2024/46.mp3",
+          "isFavorite": false
+        },
+        {
+          "filename": "59.mp3",
+          "title": "59",
+          "audioPath": "music/2024/59.mp3",
+          "isFavorite": false
+        },
+        {
+          "filename": "92_prev.mp3",
+          "title": "92_prev",
+          "audioPath": "music/2024/92_prev.mp3",
+          "isFavorite": false
+        },
+        {
+          "filename": "Huebloom - Found You - Mix 2.wav",
+          "title": "Huebloom - Found You - Mix 2",
+          "audioPath": "music/2024/Huebloom - Found You - Mix 2.wav",
+          "isFavorite": false
+        },
+        {
+          "filename": "I like you remix.wav",
+          "title": "I like you remix",
+          "audioPath": "music/2024/I like you remix.wav",
+          "isFavorite": false
+        },
+        {
+          "filename": "prev22.mp3",
+          "title": "prev22",
+          "audioPath": "music/2024/prev22.mp3",
+          "isFavorite": false
+        },
+        {
+          "filename": "prev23.mp3",
+          "title": "prev23",
+          "audioPath": "music/2024/prev23.mp3",
+          "isFavorite": false
+        },
+        {
+          "filename": "prev24.mp3",
+          "title": "prev24",
+          "audioPath": "music/2024/prev24.mp3",
+          "isFavorite": false
+        },
+        {
+          "filename": "prev26.mp3",
+          "title": "prev26",
+          "audioPath": "music/2024/prev26.mp3",
+          "isFavorite": false
+        },
+        {
+          "filename": "prev28.mp3",
+          "title": "prev28",
+          "audioPath": "music/2024/prev28.mp3",
+          "isFavorite": false
+        },
+        {
+          "filename": "prev29.mp3",
+          "title": "prev29",
+          "audioPath": "music/2024/prev29.mp3",
+          "isFavorite": false
+        },
+        {
+          "filename": "prev32.mp3",
+          "title": "prev32",
+          "audioPath": "music/2024/prev32.mp3",
+          "isFavorite": false
+        },
+        {
+          "filename": "prev33.mp3",
+          "title": "prev33",
+          "audioPath": "music/2024/prev33.mp3",
+          "isFavorite": false
+        },
+        {
+          "filename": "prev34.mp3",
+          "title": "prev34",
+          "audioPath": "music/2024/prev34.mp3",
+          "isFavorite": false
+        },
+        {
+          "filename": "prev35.mp3",
+          "title": "prev35",
+          "audioPath": "music/2024/prev35.mp3",
+          "isFavorite": false
+        },
+        {
+          "filename": "prev36.mp3",
+          "title": "prev36",
+          "audioPath": "music/2024/prev36.mp3",
+          "isFavorite": false
+        },
+        {
+          "filename": "prev37.mp3",
+          "title": "prev37",
+          "audioPath": "music/2024/prev37.mp3",
+          "isFavorite": false
+        },
+        {
+          "filename": "prev38.mp3",
+          "title": "prev38",
+          "audioPath": "music/2024/prev38.mp3",
+          "isFavorite": false
+        },
+        {
+          "filename": "prev39.mp3",
+          "title": "prev39",
+          "audioPath": "music/2024/prev39.mp3",
+          "isFavorite": false
+        },
+        {
+          "filename": "prev40.mp3",
+          "title": "prev40",
+          "audioPath": "music/2024/prev40.mp3",
+          "isFavorite": false
+        },
+        {
+          "filename": "prev41.mp3",
+          "title": "prev41",
+          "audioPath": "music/2024/prev41.mp3",
+          "isFavorite": false
+        },
+        {
+          "filename": "prev42.mp3",
+          "title": "prev42",
+          "audioPath": "music/2024/prev42.mp3",
+          "isFavorite": false
+        },
+        {
+          "filename": "prev45.wav",
+          "title": "prev45",
+          "audioPath": "music/2024/prev45.wav",
+          "isFavorite": false
+        },
+        {
+          "filename": "prev51.mp3",
+          "title": "prev51",
+          "audioPath": "music/2024/prev51.mp3",
+          "isFavorite": false
+        },
+        {
+          "filename": "prev52.mp3",
+          "title": "prev52",
+          "audioPath": "music/2024/prev52.mp3",
+          "isFavorite": false
+        },
+        {
+          "filename": "prev53.mp3",
+          "title": "prev53",
+          "audioPath": "music/2024/prev53.mp3",
+          "isFavorite": false
+        },
+        {
+          "filename": "prev54.mp3",
+          "title": "prev54",
+          "audioPath": "music/2024/prev54.mp3",
+          "isFavorite": false
+        },
+        {
+          "filename": "prev61.mp3",
+          "title": "prev61",
+          "audioPath": "music/2024/prev61.mp3",
+          "isFavorite": false
+        },
+        {
+          "filename": "prev62.mp3",
+          "title": "prev62",
+          "audioPath": "music/2024/prev62.mp3",
+          "isFavorite": false
+        },
+        {
+          "filename": "prev63.mp3",
+          "title": "prev63",
+          "audioPath": "music/2024/prev63.mp3",
+          "isFavorite": false
+        },
+        {
+          "filename": "prev93.mp3",
+          "title": "prev93",
+          "audioPath": "music/2024/prev93.mp3",
+          "isFavorite": false
+        },
+        {
+          "filename": "prev94.mp3",
+          "title": "prev94",
+          "audioPath": "music/2024/prev94.mp3",
+          "isFavorite": false
+        },
+        {
+          "filename": "prev95.mp3",
+          "title": "prev95",
+          "audioPath": "music/2024/prev95.mp3",
+          "isFavorite": false
+        },
+        {
+          "filename": "prev98.mp3",
+          "title": "prev98",
+          "audioPath": "music/2024/prev98.mp3",
+          "isFavorite": false
+        },
+        {
+          "filename": "prev99.mp3",
+          "title": "prev99",
+          "audioPath": "music/2024/prev99.mp3",
+          "isFavorite": false
+        },
+        {
+          "filename": "prev100.mp3",
+          "title": "prev100",
+          "audioPath": "music/2024/prev100.mp3",
+          "isFavorite": false
+        },
+        {
+          "filename": "prev101.mp3",
+          "title": "prev101",
+          "audioPath": "music/2024/prev101.mp3",
+          "isFavorite": false
+        },
+        {
+          "filename": "prev104.mp3",
+          "title": "prev104",
+          "audioPath": "music/2024/prev104.mp3",
+          "isFavorite": false
+        },
+        {
+          "filename": "prev105.mp3",
+          "title": "prev105",
+          "audioPath": "music/2024/prev105.mp3",
+          "isFavorite": false
+        },
+        {
+          "filename": "prev107.wav",
+          "title": "prev107",
+          "audioPath": "music/2024/prev107.wav",
+          "isFavorite": false
+        },
+        {
+          "filename": "prev108.mp3",
+          "title": "prev108",
+          "audioPath": "music/2024/prev108.mp3",
+          "isFavorite": false
+        },
+        {
+          "filename": "prev111.mp3",
+          "title": "prev111",
+          "audioPath": "music/2024/prev111.mp3",
+          "isFavorite": false
+        },
+        {
+          "filename": "prev113.wav",
+          "title": "prev113",
+          "audioPath": "music/2024/prev113.wav",
+          "isFavorite": false
+        },
+        {
+          "filename": "Project_21.wav",
+          "title": "Project_21",
+          "audioPath": "music/2024/Project_21.wav",
+          "isFavorite": false
+        },
+        {
+          "filename": "Project_25.wav",
+          "title": "Project_25",
+          "audioPath": "music/2024/Project_25.wav",
+          "isFavorite": false
+        },
+        {
+          "filename": "Project_30_Full.mp3",
+          "title": "Project_30_Full",
+          "audioPath": "music/2024/Project_30_Full.mp3",
+          "isFavorite": false
+        },
+        {
+          "filename": "Project_37 (Sound Design).mp3",
+          "title": "Project_37 (Sound Design)",
+          "audioPath": "music/2024/Project_37 (Sound Design).mp3",
+          "isFavorite": false
+        },
+        {
+          "filename": "Project_43.wav",
+          "title": "Project_43",
+          "audioPath": "music/2024/Project_43.wav",
+          "isFavorite": false
+        },
+        {
+          "filename": "Project_44.wav",
+          "title": "Project_44",
+          "audioPath": "music/2024/Project_44.wav",
+          "isFavorite": false
+        },
+        {
+          "filename": "Project_47.wav",
+          "title": "Project_47",
+          "audioPath": "music/2024/Project_47.wav",
+          "isFavorite": false
+        },
+        {
+          "filename": "Project_48.mp3",
+          "title": "Project_48",
+          "audioPath": "music/2024/Project_48.mp3",
+          "isFavorite": false
+        },
+        {
+          "filename": "Project_49.wav",
+          "title": "Project_49",
+          "audioPath": "music/2024/Project_49.wav",
+          "isFavorite": false
+        },
+        {
+          "filename": "Project_50.mp3",
+          "title": "Project_50",
+          "audioPath": "music/2024/Project_50.mp3",
+          "isFavorite": false
+        },
+        {
+          "filename": "Project_55.wav",
+          "title": "Project_55",
+          "audioPath": "music/2024/Project_55.wav",
+          "isFavorite": false
+        },
+        {
+          "filename": "Project_56.mp3",
+          "title": "Project_56",
+          "audioPath": "music/2024/Project_56.mp3",
+          "isFavorite": false
+        },
+        {
+          "filename": "Project_57.mp3",
+          "title": "Project_57",
+          "audioPath": "music/2024/Project_57.mp3",
+          "isFavorite": false
+        },
+        {
+          "filename": "Project_58.mp3",
+          "title": "Project_58",
+          "audioPath": "music/2024/Project_58.mp3",
+          "isFavorite": false
+        },
+        {
+          "filename": "Project_60.mp3",
+          "title": "Project_60",
+          "audioPath": "music/2024/Project_60.mp3",
+          "isFavorite": false
+        },
+        {
+          "filename": "Project_64.mp3",
+          "title": "Project_64",
+          "audioPath": "music/2024/Project_64.mp3",
+          "isFavorite": false
+        },
+        {
+          "filename": "Project_67.mp3",
+          "title": "Project_67",
+          "audioPath": "music/2024/Project_67.mp3",
+          "isFavorite": false
+        },
+        {
+          "filename": "Project_68.mp3",
+          "title": "Project_68",
+          "audioPath": "music/2024/Project_68.mp3",
+          "isFavorite": false
+        },
+        {
+          "filename": "Project_78.mp3",
+          "title": "Project_78",
+          "audioPath": "music/2024/Project_78.mp3",
+          "isFavorite": false
+        },
+        {
+          "filename": "Project_79.mp3",
+          "title": "Project_79",
+          "audioPath": "music/2024/Project_79.mp3",
+          "isFavorite": false
+        },
+        {
+          "filename": "Project_80.mp3",
+          "title": "Project_80",
+          "audioPath": "music/2024/Project_80.mp3",
+          "isFavorite": false
+        },
+        {
+          "filename": "Project_82.mp3",
+          "title": "Project_82",
+          "audioPath": "music/2024/Project_82.mp3",
+          "isFavorite": false
+        },
+        {
+          "filename": "Project_85_2.mp3",
+          "title": "Project_85_2",
+          "audioPath": "music/2024/Project_85_2.mp3",
+          "isFavorite": false
+        },
+        {
+          "filename": "Project_89.mp3",
+          "title": "Project_89",
+          "audioPath": "music/2024/Project_89.mp3",
+          "isFavorite": false
+        },
+        {
+          "filename": "Project_90_2.mp3",
+          "title": "Project_90_2",
+          "audioPath": "music/2024/Project_90_2.mp3",
+          "isFavorite": false
+        },
+        {
+          "filename": "Project_91.mp3",
+          "title": "Project_91",
+          "audioPath": "music/2024/Project_91.mp3",
+          "isFavorite": false
+        },
+        {
+          "filename": "Project_102.mp3",
+          "title": "Project_102",
+          "audioPath": "music/2024/Project_102.mp3",
+          "isFavorite": false
+        },
+        {
+          "filename": "What the pretty.wav",
+          "title": "What the pretty",
+          "audioPath": "music/2024/What the pretty.wav",
+          "isFavorite": false
+        },
+        {
+          "filename": "WTF.wav",
+          "title": "WTF",
+          "audioPath": "music/2024/WTF.wav",
           "isFavorite": false
         }
       ]
@@ -17,9 +557,183 @@
       "name": "2025",
       "tracks": [
         {
-          "filename": "Project_60.mp3",
-          "title": "Project_60",
-          "audioPath": "music/2025/Project_60.mp3",
+          "filename": "my_heart_v3.mp3",
+          "title": "my_heart_v3",
+          "audioPath": "music/2025/my_heart_v3.mp3",
+          "isFavorite": false
+        },
+        {
+          "filename": "prev114.mp3",
+          "title": "prev114",
+          "audioPath": "music/2025/prev114.mp3",
+          "isFavorite": false
+        },
+        {
+          "filename": "prev115.mp3",
+          "title": "prev115",
+          "audioPath": "music/2025/prev115.mp3",
+          "isFavorite": false
+        },
+        {
+          "filename": "prev116.mp3",
+          "title": "prev116",
+          "audioPath": "music/2025/prev116.mp3",
+          "isFavorite": false
+        },
+        {
+          "filename": "Project 121.mp3",
+          "title": "Project 121",
+          "audioPath": "music/2025/Project 121.mp3",
+          "isFavorite": false
+        },
+        {
+          "filename": "Project_117.mp3",
+          "title": "Project_117",
+          "audioPath": "music/2025/Project_117.mp3",
+          "isFavorite": false
+        },
+        {
+          "filename": "Project_118.mp3",
+          "title": "Project_118",
+          "audioPath": "music/2025/Project_118.mp3",
+          "isFavorite": false
+        },
+        {
+          "filename": "Project_119.mp3",
+          "title": "Project_119",
+          "audioPath": "music/2025/Project_119.mp3",
+          "isFavorite": false
+        },
+        {
+          "filename": "Project_120.mp3",
+          "title": "Project_120",
+          "audioPath": "music/2025/Project_120.mp3",
+          "isFavorite": false
+        },
+        {
+          "filename": "Project_122.mp3",
+          "title": "Project_122",
+          "audioPath": "music/2025/Project_122.mp3",
+          "isFavorite": false
+        },
+        {
+          "filename": "Project_125 (1901 Remix).mp3",
+          "title": "Project_125 (1901 Remix)",
+          "audioPath": "music/2025/Project_125 (1901 Remix).mp3",
+          "isFavorite": false
+        },
+        {
+          "filename": "Project_126.mp3",
+          "title": "Project_126",
+          "audioPath": "music/2025/Project_126.mp3",
+          "isFavorite": false
+        },
+        {
+          "filename": "Project_127.mp3",
+          "title": "Project_127",
+          "audioPath": "music/2025/Project_127.mp3",
+          "isFavorite": false
+        },
+        {
+          "filename": "Project_128.mp3",
+          "title": "Project_128",
+          "audioPath": "music/2025/Project_128.mp3",
+          "isFavorite": false
+        },
+        {
+          "filename": "Project_129.mp3",
+          "title": "Project_129",
+          "audioPath": "music/2025/Project_129.mp3",
+          "isFavorite": false
+        },
+        {
+          "filename": "Project_130.mp3",
+          "title": "Project_130",
+          "audioPath": "music/2025/Project_130.mp3",
+          "isFavorite": false
+        },
+        {
+          "filename": "Project_131.mp3",
+          "title": "Project_131",
+          "audioPath": "music/2025/Project_131.mp3",
+          "isFavorite": false
+        },
+        {
+          "filename": "Project_132.mp3",
+          "title": "Project_132",
+          "audioPath": "music/2025/Project_132.mp3",
+          "isFavorite": false
+        },
+        {
+          "filename": "Project_133.mp3",
+          "title": "Project_133",
+          "audioPath": "music/2025/Project_133.mp3",
+          "isFavorite": false
+        },
+        {
+          "filename": "Project_134.mp3",
+          "title": "Project_134",
+          "audioPath": "music/2025/Project_134.mp3",
+          "isFavorite": false
+        },
+        {
+          "filename": "Project_135.mp3",
+          "title": "Project_135",
+          "audioPath": "music/2025/Project_135.mp3",
+          "isFavorite": false
+        },
+        {
+          "filename": "Project_136.mp3",
+          "title": "Project_136",
+          "audioPath": "music/2025/Project_136.mp3",
+          "isFavorite": false
+        },
+        {
+          "filename": "Project_137.mp3",
+          "title": "Project_137",
+          "audioPath": "music/2025/Project_137.mp3",
+          "isFavorite": false
+        },
+        {
+          "filename": "Project_138.mp3",
+          "title": "Project_138",
+          "audioPath": "music/2025/Project_138.mp3",
+          "isFavorite": false
+        },
+        {
+          "filename": "Project_139.mp3",
+          "title": "Project_139",
+          "audioPath": "music/2025/Project_139.mp3",
+          "isFavorite": false
+        },
+        {
+          "filename": "Project_140.mp3",
+          "title": "Project_140",
+          "audioPath": "music/2025/Project_140.mp3",
+          "isFavorite": false
+        },
+        {
+          "filename": "Project_146.mp3",
+          "title": "Project_146",
+          "audioPath": "music/2025/Project_146.mp3",
+          "isFavorite": false
+        },
+        {
+          "filename": "Project_148.mp3",
+          "title": "Project_148",
+          "audioPath": "music/2025/Project_148.mp3",
+          "isFavorite": false
+        },
+        {
+          "filename": "Project_149.mp3",
+          "title": "Project_149",
+          "audioPath": "music/2025/Project_149.mp3",
+          "isFavorite": false
+        },
+        {
+          "filename": "Project_155.mp3",
+          "title": "Project_155",
+          "audioPath": "music/2025/Project_155.mp3",
           "isFavorite": false
         }
       ]
@@ -29,9 +743,147 @@
       "name": "2026",
       "tracks": [
         {
+          "filename": "Project_156.mp3",
+          "title": "Project_156",
+          "audioPath": "music/2026/Project_156.mp3",
+          "isFavorite": false
+        },
+        {
+          "filename": "Project_157.mp3",
+          "title": "Project_157",
+          "audioPath": "music/2026/Project_157.mp3",
+          "isFavorite": false
+        },
+        {
+          "filename": "Project_158.mp3",
+          "title": "Project_158",
+          "audioPath": "music/2026/Project_158.mp3",
+          "isFavorite": false
+        },
+        {
+          "filename": "Project_161 - Cont.mp3",
+          "title": "Project_161 - Cont",
+          "audioPath": "music/2026/Project_161 - Cont.mp3",
+          "isFavorite": false
+        },
+        {
+          "filename": "Project_162 (Wanna figure this sound out).mp3",
+          "title": "Project_162 (Wanna figure this sound out)",
+          "audioPath": "music/2026/Project_162 (Wanna figure this sound out).mp3",
+          "isFavorite": false
+        },
+        {
+          "filename": "Project_163.mp3",
+          "title": "Project_163",
+          "audioPath": "music/2026/Project_163.mp3",
+          "isFavorite": false
+        },
+        {
+          "filename": "Project_165.mp3",
+          "title": "Project_165",
+          "audioPath": "music/2026/Project_165.mp3",
+          "isFavorite": false
+        },
+        {
+          "filename": "Project_166.mp3",
+          "title": "Project_166",
+          "audioPath": "music/2026/Project_166.mp3",
+          "isFavorite": false
+        },
+        {
+          "filename": "Project_167.mp3",
+          "title": "Project_167",
+          "audioPath": "music/2026/Project_167.mp3",
+          "isFavorite": false
+        },
+        {
+          "filename": "Project_168.mp3",
+          "title": "Project_168",
+          "audioPath": "music/2026/Project_168.mp3",
+          "isFavorite": false
+        },
+        {
+          "filename": "Project_169.mp3",
+          "title": "Project_169",
+          "audioPath": "music/2026/Project_169.mp3",
+          "isFavorite": false
+        },
+        {
           "filename": "Project_170.mp3",
           "title": "Project_170",
           "audioPath": "music/2026/Project_170.mp3",
+          "isFavorite": false
+        },
+        {
+          "filename": "Project_171.mp3",
+          "title": "Project_171",
+          "audioPath": "music/2026/Project_171.mp3",
+          "isFavorite": false
+        },
+        {
+          "filename": "Project_172.mp3",
+          "title": "Project_172",
+          "audioPath": "music/2026/Project_172.mp3",
+          "isFavorite": false
+        },
+        {
+          "filename": "Project_173.mp3",
+          "title": "Project_173",
+          "audioPath": "music/2026/Project_173.mp3",
+          "isFavorite": false
+        },
+        {
+          "filename": "Project_174.mp3",
+          "title": "Project_174",
+          "audioPath": "music/2026/Project_174.mp3",
+          "isFavorite": false
+        },
+        {
+          "filename": "Project_175.mp3",
+          "title": "Project_175",
+          "audioPath": "music/2026/Project_175.mp3",
+          "isFavorite": false
+        },
+        {
+          "filename": "Project_177.mp3",
+          "title": "Project_177",
+          "audioPath": "music/2026/Project_177.mp3",
+          "isFavorite": false
+        },
+        {
+          "filename": "Project_179.mp3",
+          "title": "Project_179",
+          "audioPath": "music/2026/Project_179.mp3",
+          "isFavorite": false
+        },
+        {
+          "filename": "Project_180.mp3",
+          "title": "Project_180",
+          "audioPath": "music/2026/Project_180.mp3",
+          "isFavorite": false
+        },
+        {
+          "filename": "Project_181.mp3",
+          "title": "Project_181",
+          "audioPath": "music/2026/Project_181.mp3",
+          "isFavorite": false
+        },
+        {
+          "filename": "Project_182.mp3",
+          "title": "Project_182",
+          "audioPath": "music/2026/Project_182.mp3",
+          "isFavorite": false
+        },
+        {
+          "filename": "Project_183.mp3",
+          "title": "Project_183",
+          "audioPath": "music/2026/Project_183.mp3",
+          "isFavorite": false
+        },
+        {
+          "filename": "Right Here V2.mp3",
+          "title": "Right Here V2",
+          "audioPath": "music/2026/Right Here V2.mp3",
           "isFavorite": false
         }
       ]
