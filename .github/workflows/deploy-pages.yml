@@ -33,10 +33,10 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
-      - name: Test scanner
+      - name: Run tests
         run: npm test
 
-      - name: Type-check scanner
+      - name: Type-check scanner and UI
         run: npm run typecheck
 
       - name: Verify generated catalog
@@ -46,6 +46,7 @@ jobs:
         run: npm run build
         env:
           HUEBLOOM_MEDIA_BASE_URL: https://media.githubusercontent.com/media/${{ github.repository }}/${{ github.ref_name }}/
+          HUEBLOOM_LIBRARY_PASSWORD: ${{ secrets.HUEBLOOM_LIBRARY_PASSWORD }}
 
       - name: Configure GitHub Pages
         uses: actions/configure-pages@v5

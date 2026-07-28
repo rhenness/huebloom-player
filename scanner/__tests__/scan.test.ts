@@ -71,6 +71,9 @@ describe('scanLibrary', () => {
                             title: 'Project_1',
                             audioPath: 'music/2024/Project_1.mp3',
                             isFavorite: false,
+                            shareId: expect.stringMatching(
+                                /^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/,
+                            ),
                         },
                     ],
                 },
@@ -83,18 +86,27 @@ describe('scanLibrary', () => {
                             title: 'Project_2',
                             audioPath: 'music/2025/Project_2.MP3',
                             isFavorite: false,
+                            shareId: expect.stringMatching(
+                                /^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/,
+                            ),
                         },
                         {
                             filename: 'Project_3.WAV',
                             title: 'Project_3',
                             audioPath: 'music/2025/Project_3.WAV',
                             isFavorite: false,
+                            shareId: expect.stringMatching(
+                                /^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/,
+                            ),
                         },
                         {
                             filename: 'Project_10.mp3',
                             title: 'Project_10',
                             audioPath: 'music/2025/Project_10.mp3',
                             isFavorite: false,
+                            shareId: expect.stringMatching(
+                                /^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/,
+                            ),
                         },
                     ],
                 },
@@ -164,6 +176,9 @@ describe('scanLibrary', () => {
                             title: 'Custom title',
                             audioPath: 'music/2025/Project_10.mp3',
                             isFavorite: true,
+                            shareId: expect.stringMatching(
+                                /^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/,
+                            ),
                         },
                     ],
                 },

@@ -1,3 +1,5 @@
+import { randomUUID } from "node:crypto";
+
 export interface Library {
   folders: Folder[];
 }
@@ -13,6 +15,8 @@ export interface Track {
   title: string;
   audioPath: string;
   isFavorite: boolean;
+  /** Stable opaque identifier used by the public, single-track share route. */
+  shareId: string;
 }
 
 export interface DiscoveredFolder {
@@ -79,6 +83,17 @@ function assertBoolean(
   }
 }
 
+function assertShareId(
+  value: unknown,
+  location: string,
+): asserts value is string {
+  assertString(value, location);
+
+  if (!/^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/.test(value)) {
+    throw new LibraryValidationError(`${location} must be a UUID v4.`);
+  }
+}
+
 function assertUnique(values: readonly string[], location: string): void {
   const duplicates = values.filter(
     (value, index) => values.indexOf(value) !== index,
@@ -96,9 +111,14 @@ function validateTrack(value: unknown, location: string): Track {
     throw new LibraryValidationError(`${location} must be an object.`);
   }
 
+  const hasShareId = Object.hasOwn(value, "shareId");
+  // Read legacy catalogs without an ID so the next scan can migrate them.
+  // Any other unknown or missing field remains an error.
   assertExactKeys(
     value,
-    ["audioPath", "filename", "isFavorite", "title"],
+    hasShareId
+      ? ["audioPath", "filename", "isFavorite", "shareId", "title"]
+      : ["audioPath", "filename", "isFavorite", "title"],
     location,
   );
   assertString(value.filename, `${location}.filename`);
@@ -106,11 +126,22 @@ function validateTrack(value: unknown, location: string): Track {
   assertString(value.audioPath, `${location}.audioPath`);
   assertBoolean(value.isFavorite, `${location}.isFavorite`);
 
+  let shareId: string;
+
+  if (hasShareId) {
+    const candidateShareId = value.shareId;
+    assertShareId(candidateShareId, `${location}.shareId`);
+    shareId = candidateShareId;
+  } else {
+    shareId = randomUUID();
+  }
+
   return {
     filename: value.filename,
     title: value.title,
     audioPath: value.audioPath,
     isFavorite: value.isFavorite,
+    shareId,
   };
 }
 
@@ -155,6 +186,10 @@ export function validateLibrary(value: unknown): Library {
   assertUnique(
     folders.map((folder) => folder.id),
     "library.json folder ids",
+  );
+  assertUnique(
+    folders.flatMap((folder) => folder.tracks.map((track) => track.shareId)),
+    "library.json track shareId values",
   );
 
   return { folders };
@@ -226,6 +261,7 @@ export function reconcileLibrary(
             title: existingTrack?.title ?? track.title,
             audioPath: track.audioPath,
             isFavorite: existingTrack?.isFavorite ?? false,
+            shareId: existingTrack?.shareId ?? randomUUID(),
           };
         }),
     }))

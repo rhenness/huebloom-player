@@ -17,7 +17,8 @@ describe("reconcileLibrary", () => {
               "filename": "Project_10.mp3",
               "title": "A custom title",
               "audioPath": "music/2025/Project_10.mp3",
-              "isFavorite": true
+              "isFavorite": true,
+              "shareId": "dc3268f1-1c91-4f2a-8e2d-cd79913e5ba9"
             }
           ]
         }
@@ -70,6 +71,9 @@ describe("reconcileLibrary", () => {
               title: "Project_1",
               audioPath: "music/2024/Project_1.mp3",
               isFavorite: false,
+              shareId: expect.stringMatching(
+                /^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/,
+              ),
             },
           ],
         },
@@ -82,12 +86,16 @@ describe("reconcileLibrary", () => {
               title: "Project_2",
               audioPath: "music/2025/Project_2.mp3",
               isFavorite: false,
+              shareId: expect.stringMatching(
+                /^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/,
+              ),
             },
             {
               filename: "Project_10.mp3",
               title: "A custom title",
               audioPath: "music/2025/Project_10.mp3",
               isFavorite: true,
+              shareId: "dc3268f1-1c91-4f2a-8e2d-cd79913e5ba9",
             },
           ],
         },
@@ -103,5 +111,40 @@ describe("reconcileLibrary", () => {
     expect(() => parseLibrary('{"folders": [], "schemaVersion": 1}')).toThrow(
       LibraryValidationError,
     );
+  });
+
+  it("rejects duplicate share IDs across the library", () => {
+    expect(() =>
+      parseLibrary(`{
+        "folders": [
+          {
+            "id": "2025",
+            "name": "2025",
+            "tracks": [
+              {
+                "filename": "First.mp3",
+                "title": "First",
+                "audioPath": "music/2025/First.mp3",
+                "isFavorite": false,
+                "shareId": "dc3268f1-1c91-4f2a-8e2d-cd79913e5ba9"
+              }
+            ]
+          },
+          {
+            "id": "2026",
+            "name": "2026",
+            "tracks": [
+              {
+                "filename": "Second.mp3",
+                "title": "Second",
+                "audioPath": "music/2026/Second.mp3",
+                "isFavorite": false,
+                "shareId": "dc3268f1-1c91-4f2a-8e2d-cd79913e5ba9"
+              }
+            ]
+          }
+        ]
+      }`),
+    ).toThrow(LibraryValidationError);
   });
 });

@@ -3,6 +3,7 @@ import {
   copyFile,
   mkdir,
   readdir,
+  readFile,
   rename,
   rm,
   stat,
@@ -10,12 +11,17 @@ import {
 } from "node:fs/promises";
 import path from "node:path";
 
+import { type Library, LibraryValidationError, parseLibrary, serializeLibrary } from "./library";
+
 const runtimeConfigFilename = "config.js";
+const excludedMediaExtensions = new Set([".mp3", ".wav"]);
 
 export interface StageSiteOptions {
   repositoryRoot?: string;
   outputDirectory?: string;
+  uiBuildDirectory?: string;
   mediaBaseUrl?: string;
+  libraryPassword?: string;
 }
 
 export interface StageSiteResult {
@@ -32,6 +38,23 @@ export class StageSiteError extends Error {
 
 function defaultRepositoryRoot(): string {
   return path.resolve(__dirname, "..");
+}
+
+function loadLocalEnvironment(repositoryRoot: string): void {
+  try {
+    process.loadEnvFile(path.join(repositoryRoot, ".env"));
+  } catch (error) {
+    if (
+      typeof error === "object" &&
+      error !== null &&
+      "code" in error &&
+      error.code === "ENOENT"
+    ) {
+      return;
+    }
+
+    throw new StageSiteError(`Unable to load .env: ${String(error)}`);
+  }
 }
 
 function resolveMediaBaseUrl(mediaBaseUrl: string | undefined): string {
@@ -66,28 +89,110 @@ function resolveMediaBaseUrl(mediaBaseUrl: string | undefined): string {
   return parsedUrl.href.endsWith("/") ? parsedUrl.href : `${parsedUrl.href}/`;
 }
 
-function serializeRuntimeConfig(mediaBaseUrl: string): string {
+function resolveLibraryPassword(libraryPassword: string | undefined): string {
+  return libraryPassword && libraryPassword.trim().length > 0
+    ? libraryPassword
+    : "change-me";
+}
+
+function serializeRuntimeConfig(mediaBaseUrl: string, libraryPassword: string): string {
   return `window.HUEBLOOM_CONFIG = Object.freeze({
   libraryUrl: "./library.json",
   mediaBaseUrl: ${JSON.stringify(mediaBaseUrl)},
+  libraryPassword: ${JSON.stringify(libraryPassword)},
 });
 `;
+}
+
+function createSharePageHtml(compiledIndexHtml: string): string {
+  const openingHeadTag = /<head(?:\s[^>]*)?>/i;
+
+  if (!openingHeadTag.test(compiledIndexHtml)) {
+    throw new StageSiteError(
+      "Compiled UI index.html must contain a <head> element to create share pages.",
+    );
+  }
+
+  // Every generated page lives at share/{id}/index.html.  The base keeps the
+  // relative Vite assets, config, and catalog rooted at the deployed site.
+  return compiledIndexHtml.replace(
+    openingHeadTag,
+    (match) => `${match}\n    <base href=\"../../\" />`,
+  );
+}
+
+async function readLibraryForStage(libraryPath: string): Promise<Library> {
+  let contents: string;
+
+  try {
+    contents = await readFile(libraryPath, "utf8");
+  } catch (error) {
+    throw new StageSiteError(`Unable to read library.json: ${String(error)}`);
+  }
+
+  try {
+    return parseLibrary(contents);
+  } catch (error) {
+    if (error instanceof LibraryValidationError) {
+      throw new StageSiteError(`Cannot stage site: ${error.message}`);
+    }
+
+    throw error;
+  }
+}
+
+async function stageSharePages(
+  outputDirectory: string,
+  compiledIndexHtml: string,
+  library: Library,
+): Promise<void> {
+  const tracks = library.folders.flatMap((folder) => folder.tracks);
+
+  if (tracks.length === 0) {
+    return;
+  }
+
+  const sharePageHtml = createSharePageHtml(compiledIndexHtml);
+
+  await Promise.all(
+    tracks.map(async (track) => {
+      const shareDirectory = path.join(outputDirectory, "share", track.shareId);
+      await mkdir(shareDirectory, { recursive: true });
+      await writeFile(path.join(shareDirectory, "index.html"), sharePageHtml, "utf8");
+    }),
+  );
 }
 
 async function copyDirectoryContents(
   sourceDirectory: string,
   destinationDirectory: string,
+  excludedDirectoryNames: ReadonlySet<string> = new Set(),
 ): Promise<void> {
   const entries = await readdir(sourceDirectory, { withFileTypes: true });
 
   await Promise.all(
     entries.map(async (entry) => {
+      if (entry.isDirectory() && excludedDirectoryNames.has(entry.name)) {
+        return;
+      }
+
+      if (
+        entry.isFile() &&
+        excludedMediaExtensions.has(path.extname(entry.name).toLowerCase())
+      ) {
+        return;
+      }
+
       const sourcePath = path.join(sourceDirectory, entry.name);
       const destinationPath = path.join(destinationDirectory, entry.name);
 
       if (entry.isDirectory()) {
         await mkdir(destinationPath, { recursive: true });
-        await copyDirectoryContents(sourcePath, destinationPath);
+        await copyDirectoryContents(
+          sourcePath,
+          destinationPath,
+          excludedDirectoryNames,
+        );
         return;
       }
 
@@ -152,29 +257,53 @@ export async function stageSite(
   const outputDirectory = path.resolve(
     options.outputDirectory ?? path.join(repositoryRoot, "dist"),
   );
+  loadLocalEnvironment(repositoryRoot);
   const mediaBaseUrl = resolveMediaBaseUrl(
     options.mediaBaseUrl ?? process.env.HUEBLOOM_MEDIA_BASE_URL,
   );
-  const uiDirectory = path.join(repositoryRoot, "ui");
+  const libraryPassword = resolveLibraryPassword(
+    options.libraryPassword ?? process.env.HUEBLOOM_LIBRARY_PASSWORD,
+  );
+  const uiBuildDirectory = path.resolve(
+    options.uiBuildDirectory ?? path.join(repositoryRoot, ".ui-build"),
+  );
   const libraryPath = path.join(repositoryRoot, "library.json");
+  const compiledIndexPath = path.join(uiBuildDirectory, "index.html");
   const temporaryDirectory = `${outputDirectory}.tmp-${process.pid}-${randomUUID()}`;
 
   await Promise.all([
-    assertDirectory(uiDirectory, "UI directory"),
+    assertDirectory(uiBuildDirectory, "Compiled UI build directory"),
+    assertFile(compiledIndexPath, "Compiled UI index.html"),
     assertFile(libraryPath, "library.json"),
+  ]);
+
+  const [library, compiledIndexHtml] = await Promise.all([
+    readLibraryForStage(libraryPath),
+    readFile(compiledIndexPath, "utf8"),
   ]);
 
   await rm(temporaryDirectory, { recursive: true, force: true });
   await mkdir(temporaryDirectory, { recursive: true });
 
   try {
-    await copyDirectoryContents(uiDirectory, temporaryDirectory);
-    await copyFile(libraryPath, path.join(temporaryDirectory, "library.json"));
+    await copyDirectoryContents(
+      uiBuildDirectory,
+      temporaryDirectory,
+      // Pages must not receive the Git LFS music tree, even if it is copied
+      // into the Vite output by mistake.
+      new Set(["music"]),
+    );
     await writeFile(
-      path.join(temporaryDirectory, runtimeConfigFilename),
-      serializeRuntimeConfig(mediaBaseUrl),
+      path.join(temporaryDirectory, "library.json"),
+      serializeLibrary(library),
       "utf8",
     );
+    await writeFile(
+      path.join(temporaryDirectory, runtimeConfigFilename),
+      serializeRuntimeConfig(mediaBaseUrl, libraryPassword),
+      "utf8",
+    );
+    await stageSharePages(temporaryDirectory, compiledIndexHtml, library);
     await rm(outputDirectory, { recursive: true, force: true });
     await rename(temporaryDirectory, outputDirectory);
   } catch (error) {

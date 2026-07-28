@@ -1,28 +1,42 @@
 {
-  "name": "huebloom",
+  "name": "huebloom-player",
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
   "scripts": {
-    "build": "npm run build:library && npm run build:site",
+    "build": "npm run build:library && npm run build:ui && npm run build:site",
     "build:library": "tsx scanner/scan.ts",
+    "build:ui": "vite build",
     "build:site": "tsx scanner/stage-site.ts",
     "scan:check": "tsx scanner/scan.ts --check",
-    "start": "http-server . -c-1",
+    "dev:ui": "vite",
+    "start": "npm run dev:ui",
+    "preview": "http-server dist -c-1",
     "test": "jest",
-    "typecheck": "tsc --noEmit"
+    "typecheck": "npm run typecheck:scanner && npm run typecheck:ui",
+    "typecheck:scanner": "tsc --project tsconfig.json --noEmit",
+    "typecheck:ui": "tsc --project tsconfig.ui.json --noEmit && tsc --project tsconfig.vite.json --noEmit"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "type": "commonjs",
+  "dependencies": {
+    "lucide-react": "^0.468.0",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0",
+    "zustand": "^5.0.0"
+  },
   "devDependencies": {
     "@types/jest": "^30.0.0",
     "@types/node": "^26.1.1",
+    "@types/react": "^19.0.0",
+    "@types/react-dom": "^19.0.0",
     "http-server": "^14.1.1",
     "jest": "^30.4.2",
     "ts-jest": "^29.4.12",
     "tsx": "^4.23.1",
-    "typescript": "^6.0.3"
+    "typescript": "^6.0.3",
+    "vite": "^7.0.0"
   }
 }
