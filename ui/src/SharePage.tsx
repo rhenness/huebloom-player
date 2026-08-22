@@ -79,8 +79,8 @@ export default function SharePage({ shareId }: SharePageProps) {
     useEffect(() => {
         const title =
             state.status === 'ready' && state.track
-                ? `${state.track.title} | Huebloom`
-                : 'Shared track | Huebloom';
+                ? `Huebloom shared a track | ${state.track.title}`
+                : 'Huebloom shared a track';
 
         document.title = title;
     }, [state.status, state.track]);

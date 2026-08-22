@@ -158,7 +158,7 @@ describe("stageSite", () => {
               tracks: [
                 {
                   filename: "Shared track.mp3",
-                  title: "Shared track",
+                  title: "Shared & <bright> track",
                   audioPath: "music/2026/Shared track.mp3",
                   isFavorite: false,
                   shareId,
@@ -196,7 +196,7 @@ describe("stageSite", () => {
         "utf8",
       ),
     ).resolves.toBe(
-      "<!doctype html><html><head>\n    <base href=\"../../\" /><title>Huebloom</title></head><body><div id=\"root\"></div></body></html>",
+      "<!doctype html><html><head>\n    <base href=\"../../\" />\n    <meta property=\"og:title\" content=\"Huebloom shared a track | Shared &amp; &lt;bright&gt; track\" /><title>Huebloom shared a track | Shared &amp; &lt;bright&gt; track</title></head><body><div id=\"root\"></div></body></html>",
     );
     await expect(
       readFile(

@@ -16,6 +16,7 @@ import { parseWaveformData, WaveformError } from "./waveforms";
 
 const runtimeConfigFilename = "config.js";
 const excludedMediaExtensions = new Set([".mp3", ".wav"]);
+const shareTitlePrefix = "Huebloom shared a track";
 
 export interface StageSiteOptions {
   repositoryRoot?: string;
@@ -105,8 +106,23 @@ function serializeRuntimeConfig(mediaBaseUrl: string, libraryPassword: string): 
 `;
 }
 
-function createSharePageHtml(compiledIndexHtml: string): string {
+function escapeHtml(value: string): string {
+  return value.replace(/[&<>"']/g, (character) => {
+    const entities: Record<string, string> = {
+      "&": "&amp;",
+      "<": "&lt;",
+      ">": "&gt;",
+      '"': "&quot;",
+      "'": "&#39;",
+    };
+
+    return entities[character];
+  });
+}
+
+function createSharePageHtml(compiledIndexHtml: string, trackTitle: string): string {
   const openingHeadTag = /<head(?:\s[^>]*)?>/i;
+  const titleElement = /<title(?:\s[^>]*)?>[\s\S]*?<\/title>/i;
 
   if (!openingHeadTag.test(compiledIndexHtml)) {
     throw new StageSiteError(
@@ -114,12 +130,23 @@ function createSharePageHtml(compiledIndexHtml: string): string {
     );
   }
 
+  if (!titleElement.test(compiledIndexHtml)) {
+    throw new StageSiteError(
+      "Compiled UI index.html must contain a <title> element to create share pages.",
+    );
+  }
+
+  const escapedTitle = escapeHtml(`${shareTitlePrefix} | ${trackTitle}`);
+
   // Every generated page lives at share/{id}/index.html.  The base keeps the
   // relative Vite assets, config, and catalog rooted at the deployed site.
-  return compiledIndexHtml.replace(
-    openingHeadTag,
-    (match) => `${match}\n    <base href=\"../../\" />`,
-  );
+  return compiledIndexHtml
+    .replace(titleElement, `<title>${escapedTitle}</title>`)
+    .replace(
+      openingHeadTag,
+      (match) =>
+        `${match}\n    <base href=\"../../\" />\n    <meta property=\"og:title\" content=\"${escapedTitle}\" />`,
+    );
 }
 
 async function readLibraryForStage(libraryPath: string): Promise<Library> {
@@ -153,13 +180,15 @@ async function stageSharePages(
     return;
   }
 
-  const sharePageHtml = createSharePageHtml(compiledIndexHtml);
-
   await Promise.all(
     tracks.map(async (track) => {
       const shareDirectory = path.join(outputDirectory, "share", track.shareId);
       await mkdir(shareDirectory, { recursive: true });
-      await writeFile(path.join(shareDirectory, "index.html"), sharePageHtml, "utf8");
+      await writeFile(
+        path.join(shareDirectory, "index.html"),
+        createSharePageHtml(compiledIndexHtml, track.title),
+        "utf8",
+      );
     }),
   );
 }
