@@ -2,7 +2,7 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import { Menu } from "lucide-react";
 
 import { LibrarySidebar, PlayerBar, TrackTable } from "./components";
-import { getRuntimeConfig } from "./config";
+import { getRuntimeConfig, resolveWaveformUrl } from "./config";
 import { getFavoriteTracks } from "./library";
 import { getNextQueueState } from "./player/queue";
 import {
@@ -169,6 +169,7 @@ export default function App() {
               ? "Favorites"
               : selectedFolder?.name ?? (libraryStatus === "error" ? "Library unavailable" : "Library")
           }
+              getWaveformUrl={(track) => resolveWaveformUrl(track, config)}
           isLoading={isLibraryLoading}
           isPlaying={isPlaying}
           copiedShareId={copiedShareId}
@@ -193,6 +194,7 @@ export default function App() {
       </section>
 
       <PlayerBar
+        audioRef={audioRef}
         currentTime={currentTime}
         disableNext={!hasNextTrack}
         duration={duration}
@@ -212,6 +214,7 @@ export default function App() {
         shuffleEnabled={shuffleEnabled}
         track={currentTrack}
         volume={volume}
+        waveformUrl={currentTrack ? resolveWaveformUrl(currentTrack, config) : undefined}
       />
 
       <audio

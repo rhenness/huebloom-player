@@ -1,7 +1,17 @@
 import type { CSSProperties } from "react";
 
+export const MAX_MEDIA_VOLUME = 0.5;
+
 export function clamp(value: number, min: number, max: number) {
   return Math.min(Math.max(Number.isFinite(value) ? value : min, min), max);
+}
+
+export function toMediaVolume(logicalVolume: number): number {
+  return clamp(logicalVolume, 0, 1) * MAX_MEDIA_VOLUME;
+}
+
+export function fromMediaVolume(mediaVolume: number): number {
+  return clamp(mediaVolume, 0, MAX_MEDIA_VOLUME) / MAX_MEDIA_VOLUME;
 }
 
 type RangeFillStyle = CSSProperties & {

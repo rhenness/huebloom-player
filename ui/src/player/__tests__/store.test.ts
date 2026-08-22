@@ -26,6 +26,20 @@ const library: Library = {
   ],
 };
 
+describe("player store initial selection", () => {
+  it("selects the first playable track without starting playback", () => {
+    usePlayerStore.getState().setLibrary(library);
+
+    const state = usePlayerStore.getState();
+    expect(selectCurrentTrack(state)?.title).toBe("First");
+    expect(state.queueFolderId).toBe("2026");
+    expect(state.selectedFolderId).toBe("2026");
+    expect(state.playbackIntent).toBe(false);
+    expect(state.isPlaying).toBe(false);
+    expect(state.playbackStatus).toBe("paused");
+  });
+});
+
 describe("player store end-of-track behavior", () => {
   beforeEach(() => {
     usePlayerStore.getState().setLibrary(library);

@@ -56,6 +56,9 @@ describe("stageSite", () => {
       "library.json",
       '{\n  "folders": []\n}\n',
     );
+    await mkdir(path.join(repositoryRoot, ".waveforms", "data"), {
+      recursive: true,
+    });
     await writeFixtureFile(repositoryRoot, "music/2024/Project_1.mp3", "ID3");
     await writeFixtureFile(
       repositoryRoot,
@@ -115,6 +118,9 @@ describe("stageSite", () => {
       readFile(path.join(outputDirectory, "assets", "leaked-track.mp3"), "utf8"),
     ).rejects.toThrow("ENOENT");
     await expect(
+      readFile(path.join(outputDirectory, "waveforms", "cache.json"), "utf8"),
+    ).rejects.toThrow("ENOENT");
+    await expect(
       readFile(path.join(outputDirectory, "config.js"), "utf8"),
     ).resolves.toBe(
       `window.HUEBLOOM_CONFIG = Object.freeze({
@@ -165,6 +171,17 @@ describe("stageSite", () => {
         2,
       )}\n`,
     );
+    const waveform = `${JSON.stringify({
+      version: 1,
+      duration: 12.5,
+      scale: 128,
+      peaks: [-64, 63, -32, 31],
+    })}\n`;
+    await writeFixtureFile(
+      repositoryRoot,
+      `.waveforms/data/${shareId}.json`,
+      waveform,
+    );
 
     const outputDirectory = path.join(repositoryRoot, "dist");
     await stageSite({
@@ -181,6 +198,44 @@ describe("stageSite", () => {
     ).resolves.toBe(
       "<!doctype html><html><head>\n    <base href=\"../../\" /><title>Huebloom</title></head><body><div id=\"root\"></div></body></html>",
     );
+    await expect(
+      readFile(
+        path.join(outputDirectory, "waveforms", `${shareId}.json`),
+        "utf8",
+      ),
+    ).resolves.toBe(waveform);
+  });
+
+  it("refuses to stage a catalog track without valid waveform data", async () => {
+    const shareId = "dc3268f1-1c91-4f2a-8e2d-cd79913e5ba9";
+    await writeFixtureFile(
+      repositoryRoot,
+      "library.json",
+      `${JSON.stringify({
+        folders: [
+          {
+            id: "2026",
+            name: "2026",
+            tracks: [
+              {
+                filename: "Missing.mp3",
+                title: "Missing",
+                audioPath: "music/2026/Missing.mp3",
+                isFavorite: false,
+                shareId,
+              },
+            ],
+          },
+        ],
+      })}\n`,
+    );
+
+    await expect(
+      stageSite({
+        repositoryRoot,
+        mediaBaseUrl: "https://media.example.test/huebloom/",
+      }),
+    ).rejects.toThrow("Waveform for music/2026/Missing.mp3 is missing or invalid");
   });
 
   it("requires a compiled Vite output directory", async () => {

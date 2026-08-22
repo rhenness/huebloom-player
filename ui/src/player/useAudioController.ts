@@ -1,6 +1,11 @@
 import { useCallback, useEffect, useRef } from "react";
 
 import { getRuntimeConfig, resolveTrackUrl } from "../config";
+import {
+  fromMediaVolume,
+  MAX_MEDIA_VOLUME,
+  toMediaVolume,
+} from "../components/audio-controls";
 import type { RuntimeConfig } from "../types";
 import { selectCurrentTrack, usePlayerStore } from "./store";
 
@@ -81,7 +86,14 @@ export function useAudioController(
       usePlayerStore.getState().onAudioEnded();
     };
     const onVolumeChange = () => {
-      usePlayerStore.getState().syncAudioVolume(audio.volume, audio.muted);
+      const cappedVolume = Math.min(audio.volume, MAX_MEDIA_VOLUME);
+      if (audio.volume !== cappedVolume) {
+        audio.volume = cappedVolume;
+      }
+
+      usePlayerStore
+        .getState()
+        .syncAudioVolume(fromMediaVolume(cappedVolume), audio.muted);
     };
     const onError = () => {
       // Source transitions may emit an abort error for the old track. It is
@@ -187,7 +199,7 @@ export function useAudioController(
       return;
     }
 
-    audio.volume = volume;
+    audio.volume = toMediaVolume(volume);
     audio.muted = muted;
   }, [muted, volume]);
 

@@ -2,7 +2,11 @@ import { useEffect, useMemo, useState } from 'react';
 import { CircleAlert, LoaderCircle } from 'lucide-react';
 
 import { DefaultArtwork, ShareTrackPlayer } from './components';
-import { getRuntimeConfig, resolveTrackUrl } from './config';
+import {
+    getRuntimeConfig,
+    resolveTrackUrl,
+    resolveWaveformUrl,
+} from './config';
 import { getTrackByShareId, loadLibrary } from './library';
 import type { RuntimeConfig } from './types';
 
@@ -157,6 +161,7 @@ export default function SharePage({ shareId }: SharePageProps) {
                             key={trackUrl}
                             src={trackUrl}
                             trackTitle={state.track.title}
+                            waveformUrl={resolveWaveformUrl(state.track, config)}
                         />
                     </div>
                 ) : null}

@@ -79,3 +79,13 @@ export function resolveTrackUrl(
 ): string {
   return resolveResourceUrl(track.audioPath, config.mediaBaseUrl);
 }
+
+export function resolveWaveformUrl(
+  track: Pick<Track, "shareId">,
+  config: RuntimeConfig = getRuntimeConfig(),
+): string {
+  return new URL(
+    `waveforms/${encodeURIComponent(track.shareId)}.json`,
+    resolveLibraryUrl(config),
+  ).href;
+}

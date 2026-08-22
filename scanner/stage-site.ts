@@ -12,6 +12,7 @@ import {
 import path from "node:path";
 
 import { type Library, LibraryValidationError, parseLibrary, serializeLibrary } from "./library";
+import { parseWaveformData, WaveformError } from "./waveforms";
 
 const runtimeConfigFilename = "config.js";
 const excludedMediaExtensions = new Set([".mp3", ".wav"]);
@@ -163,6 +164,33 @@ async function stageSharePages(
   );
 }
 
+async function stageWaveforms(
+  sourceDirectory: string,
+  outputDirectory: string,
+  library: Library,
+): Promise<void> {
+  const outputWaveformDirectory = path.join(outputDirectory, "waveforms");
+  const tracks = library.folders.flatMap((folder) => folder.tracks);
+  await mkdir(outputWaveformDirectory, { recursive: true });
+
+  await Promise.all(
+    tracks.map(async (track) => {
+      const filename = `${track.shareId}.json`;
+      const sourcePath = path.join(sourceDirectory, filename);
+
+      try {
+        parseWaveformData(await readFile(sourcePath, "utf8"));
+        await copyFile(sourcePath, path.join(outputWaveformDirectory, filename));
+      } catch (error) {
+        const detail = error instanceof WaveformError ? error.message : String(error);
+        throw new StageSiteError(
+          `Waveform for ${track.audioPath} is missing or invalid: ${detail}`,
+        );
+      }
+    }),
+  );
+}
+
 async function copyDirectoryContents(
   sourceDirectory: string,
   destinationDirectory: string,
@@ -268,6 +296,7 @@ export async function stageSite(
     options.uiBuildDirectory ?? path.join(repositoryRoot, ".ui-build"),
   );
   const libraryPath = path.join(repositoryRoot, "library.json");
+  const waveformDataDirectory = path.join(repositoryRoot, ".waveforms", "data");
   const compiledIndexPath = path.join(uiBuildDirectory, "index.html");
   const temporaryDirectory = `${outputDirectory}.tmp-${process.pid}-${randomUUID()}`;
 
@@ -275,6 +304,7 @@ export async function stageSite(
     assertDirectory(uiBuildDirectory, "Compiled UI build directory"),
     assertFile(compiledIndexPath, "Compiled UI index.html"),
     assertFile(libraryPath, "library.json"),
+    assertDirectory(waveformDataDirectory, "Generated waveform data directory"),
   ]);
 
   const [library, compiledIndexHtml] = await Promise.all([
@@ -303,6 +333,7 @@ export async function stageSite(
       serializeRuntimeConfig(mediaBaseUrl, libraryPassword),
       "utf8",
     );
+    await stageWaveforms(waveformDataDirectory, temporaryDirectory, library);
     await stageSharePages(temporaryDirectory, compiledIndexHtml, library);
     await rm(outputDirectory, { recursive: true, force: true });
     await rename(temporaryDirectory, outputDirectory);

@@ -8,6 +8,7 @@ const repositoryRoot = path.resolve(__dirname);
 const uiRoot = path.join(repositoryRoot, "ui");
 const uiBuildDirectory = path.join(repositoryRoot, ".ui-build");
 const musicRoot = path.join(repositoryRoot, "music");
+const waveformRoot = path.join(repositoryRoot, ".waveforms", "data");
 
 function isWithinDirectory(candidatePath: string, directoryPath: string): boolean {
   const relativePath = path.relative(directoryPath, candidatePath);
@@ -131,6 +132,31 @@ function localLibraryPlugin(): Plugin {
 
         if (requestPath === "/library.json") {
           filePath = path.join(repositoryRoot, "library.json");
+        } else if (requestPath.startsWith("/waveforms/")) {
+          let relativeWaveformPath: string;
+
+          try {
+            relativeWaveformPath = decodeURIComponent(
+              requestPath.slice("/waveforms/".length),
+            );
+          } catch {
+            response.statusCode = 400;
+            response.end("Invalid waveform URL.");
+            return;
+          }
+
+          const candidatePath = path.resolve(waveformRoot, relativeWaveformPath);
+
+          if (
+            path.extname(candidatePath).toLowerCase() !== ".json" ||
+            !isWithinDirectory(candidatePath, waveformRoot)
+          ) {
+            response.statusCode = 403;
+            response.end("Invalid waveform path.");
+            return;
+          }
+
+          filePath = candidatePath;
         } else if (requestPath.startsWith("/music/")) {
           let relativeMusicPath: string;
 

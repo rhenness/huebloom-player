@@ -1,69 +1,76 @@
 name: Deploy site to GitHub Pages
 
 on:
-  push:
-    branches: [main]
-  workflow_dispatch:
+    push:
+        branches: [main]
+    workflow_dispatch:
 
 permissions:
-  contents: read
-  pages: write
-  id-token: write
+    contents: read
+    pages: write
+    id-token: write
 
 concurrency:
-  group: pages
-  cancel-in-progress: false
+    group: pages
+    cancel-in-progress: false
 
 jobs:
-  build:
-    runs-on: ubuntu-latest
+    build:
+        runs-on: ubuntu-latest
 
-    steps:
-      - name: Check out repository and LFS media
-        uses: actions/checkout@v4
-        with:
-          lfs: true
+        steps:
+            - name: Check out repository and LFS media
+              uses: actions/checkout@v4
+              with:
+                  lfs: true
 
-      - name: Set up Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: 22
-          cache: npm
+            - name: Set up Node.js
+              uses: actions/setup-node@v4
+              with:
+                  node-version: 22
+                  cache: npm
 
-      - name: Install dependencies
-        run: npm ci
+            - name: Install dependencies
+              run: npm ci
 
-      - name: Run tests
-        run: npm test
+            - name: Install waveform generator
+              run: |
+                  sudo add-apt-repository --yes ppa:chris-needham/ppa
+                  sudo apt-get update
+                  sudo apt-get install --yes audiowaveform
+                  audiowaveform --version
 
-      - name: Type-check scanner and UI
-        run: npm run typecheck
+            - name: Run tests
+              run: npm test
 
-      - name: Verify generated catalog
-        run: npm run scan:check
+            - name: Type-check scanner and UI
+              run: npm run typecheck
 
-      - name: Build static site
-        run: npm run build
-        env:
-          HUEBLOOM_MEDIA_BASE_URL: https://media.githubusercontent.com/media/${{ github.repository }}/${{ github.ref_name }}/
-          HUEBLOOM_LIBRARY_PASSWORD: ${{ secrets.HUEBLOOM_LIBRARY_PASSWORD }}
+            - name: Verify generated catalog
+              run: npm run scan:check
 
-      - name: Configure GitHub Pages
-        uses: actions/configure-pages@v5
+            - name: Build static site
+              run: npm run build
+              env:
+                  HUEBLOOM_MEDIA_BASE_URL: https://media.githubusercontent.com/media/${{ github.repository }}/${{ github.ref_name }}/
+                  HUEBLOOM_LIBRARY_PASSWORD: ${{ secrets.HUEBLOOM_LIBRARY_PASSWORD }}
 
-      - name: Upload Pages artifact
-        uses: actions/upload-pages-artifact@v3
-        with:
-          path: dist
+            - name: Configure GitHub Pages
+              uses: actions/configure-pages@v5
 
-  deploy:
-    needs: build
-    runs-on: ubuntu-latest
-    environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
+            - name: Upload Pages artifact
+              uses: actions/upload-pages-artifact@v3
+              with:
+                  path: dist
 
-    steps:
-      - name: Deploy GitHub Pages
-        id: deployment
-        uses: actions/deploy-pages@v4
+    deploy:
+        needs: build
+        runs-on: ubuntu-latest
+        environment:
+            name: github-pages
+            url: ${{ steps.deployment.outputs.page_url }}
+
+        steps:
+            - name: Deploy GitHub Pages
+              id: deployment
+              uses: actions/deploy-pages@v4

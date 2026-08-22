@@ -7,15 +7,18 @@ import {
   Volume2,
   VolumeX,
 } from "lucide-react";
+import type { RefObject } from "react";
 
 import { clamp, formatTime, rangeFillStyle } from "./audio-controls";
 import { DefaultArtwork } from "./DefaultArtwork";
 import { IconButton } from "./IconButton";
 import type { PlayerAction, PlayerTrack } from "./view-models";
+import { WaveformScrubber } from "./WaveformScrubber";
 
 export { formatTime };
 
 export interface PlayerBarProps {
+  audioRef: RefObject<HTMLAudioElement | null>;
   track?: PlayerTrack | null;
   isPlaying: boolean;
   shuffleEnabled: boolean;
@@ -32,6 +35,7 @@ export interface PlayerBarProps {
   onSeek: (time: number) => void;
   onSetVolume: (volume: number) => void;
   onToggleMute: PlayerAction;
+  waveformUrl?: string;
   className?: string;
 }
 
@@ -40,6 +44,7 @@ export interface PlayerBarProps {
  * its parent and deliberately does not own an HTMLAudioElement or a store.
  */
 export function PlayerBar({
+  audioRef,
   className,
   currentTime,
   disableNext = false,
@@ -57,6 +62,7 @@ export function PlayerBar({
   shuffleEnabled,
   track,
   volume,
+  waveformUrl = "",
 }: PlayerBarProps) {
   const hasTrack = Boolean(track);
   const safeDuration = Number.isFinite(duration) && duration > 0 ? duration : 0;
@@ -125,17 +131,15 @@ export function PlayerBar({
           <time className="player-bar__time" dateTime={`PT${Math.floor(safeCurrentTime)}S`}>
             {formatTime(safeCurrentTime)}
           </time>
-          <input
-            aria-label="Playback position"
-            className="range-input range-input--progress"
+          <WaveformScrubber
+            audioRef={audioRef}
+            currentTime={safeCurrentTime}
             disabled={!hasTrack || safeDuration === 0}
-            max={safeDuration || 1}
-            min="0"
-            onChange={(event) => onSeek(Number(event.currentTarget.value))}
-            step="0.1"
-            style={progressFillStyle}
-            type="range"
-            value={safeCurrentTime}
+            duration={safeDuration}
+            fillStyle={progressFillStyle}
+            label="Playback position"
+            onSeek={onSeek}
+            waveformUrl={waveformUrl}
           />
           <time className="player-bar__time" dateTime={`PT${Math.floor(safeDuration)}S`}>
             {formatTime(safeDuration)}

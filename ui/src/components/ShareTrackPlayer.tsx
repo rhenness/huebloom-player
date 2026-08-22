@@ -1,12 +1,21 @@
 import { useEffect, useRef, useState } from "react";
 import { Pause, Play, Volume2, VolumeX } from "lucide-react";
 
-import { clamp, formatTime, rangeFillStyle } from "./audio-controls";
+import {
+  clamp,
+  formatTime,
+  fromMediaVolume,
+  MAX_MEDIA_VOLUME,
+  rangeFillStyle,
+  toMediaVolume,
+} from "./audio-controls";
 import { IconButton } from "./IconButton";
+import { WaveformScrubber } from "./WaveformScrubber";
 
 export interface ShareTrackPlayerProps {
   src: string;
   trackTitle: string;
+  waveformUrl: string;
 }
 
 function mediaDuration(audio: HTMLAudioElement): number {
@@ -22,7 +31,11 @@ function playbackErrorMessage(error: unknown): string {
 }
 
 /** A standalone custom player for one public shared track. */
-export function ShareTrackPlayer({ src, trackTitle }: ShareTrackPlayerProps) {
+export function ShareTrackPlayer({
+  src,
+  trackTitle,
+  waveformUrl,
+}: ShareTrackPlayerProps) {
   const audioRef = useRef<HTMLAudioElement | null>(null);
   const [isPlaying, setIsPlaying] = useState(false);
   const [currentTime, setCurrentTime] = useState(0);
@@ -42,6 +55,14 @@ export function ShareTrackPlayer({ src, trackTitle }: ShareTrackPlayerProps) {
     setDuration(0);
     setPlaybackError(null);
   }, [src]);
+
+  useEffect(() => {
+    const audio = audioRef.current;
+    if (audio) {
+      audio.volume = toMediaVolume(volume);
+      audio.muted = muted;
+    }
+  }, [muted, volume]);
 
   async function togglePlay() {
     const audio = audioRef.current;
@@ -93,7 +114,7 @@ export function ShareTrackPlayer({ src, trackTitle }: ShareTrackPlayerProps) {
     const next = clamp(nextVolume, 0, 1);
 
     if (audio) {
-      audio.volume = next;
+      audio.volume = toMediaVolume(next);
       audio.muted = false;
     }
 
@@ -132,8 +153,14 @@ export function ShareTrackPlayer({ src, trackTitle }: ShareTrackPlayerProps) {
         onPlay={() => setIsPlaying(true)}
         onTimeUpdate={(event) => setCurrentTime(event.currentTarget.currentTime)}
         onVolumeChange={(event) => {
-          setMuted(event.currentTarget.muted);
-          setVolume(event.currentTarget.volume);
+          const audio = event.currentTarget;
+          const cappedVolume = Math.min(audio.volume, MAX_MEDIA_VOLUME);
+          if (audio.volume !== cappedVolume) {
+            audio.volume = cappedVolume;
+          }
+
+          setMuted(audio.muted);
+          setVolume(fromMediaVolume(cappedVolume));
         }}
         preload="metadata"
         ref={audioRef}
@@ -159,18 +186,15 @@ export function ShareTrackPlayer({ src, trackTitle }: ShareTrackPlayerProps) {
 
       <div className="share-track-player__progress">
         <time dateTime={`PT${Math.floor(safeCurrentTime)}S`}>{formatTime(safeCurrentTime)}</time>
-        <input
-          aria-label="Playback position"
-          aria-valuetext={`${formatTime(safeCurrentTime)} of ${formatTime(safeDuration)}`}
-          className="range-input range-input--progress"
+        <WaveformScrubber
+          audioRef={audioRef}
+          currentTime={safeCurrentTime}
           disabled={safeDuration === 0}
-          max={safeDuration || 1}
-          min="0"
-          onChange={(event) => seekTo(Number(event.currentTarget.value))}
-          step="0.1"
-          style={progressFill}
-          type="range"
-          value={safeCurrentTime}
+          duration={safeDuration}
+          fillStyle={progressFill}
+          label="Playback position"
+          onSeek={seekTo}
+          waveformUrl={waveformUrl}
         />
         <time dateTime={`PT${Math.floor(safeDuration)}S`}>{formatTime(safeDuration)}</time>
       </div>

@@ -498,6 +498,11 @@ input:focus-visible {
   color: #f3c969;
 }
 
+.track-row__waveform,
+.track-table__waveform-heading {
+  display: none;
+}
+
 .track-row.has-share-action .track-row__button {
   padding-right: 76px;
 }
@@ -536,6 +541,88 @@ input:focus-visible {
 
 .track-table-panel--with-folder.track-table-panel--with-share .track-table__column-headings {
   grid-template-columns: minmax(0, 1fr) minmax(105px, 0.42fr) 46px 36px;
+}
+
+@media (min-width: 901px) {
+  .track-table-panel--with-waveform .track-table__column-headings {
+    grid-template-columns: minmax(0, 1fr) minmax(140px, 0.48fr) 46px;
+  }
+
+  .track-table-panel--with-waveform .track-row__button {
+    grid-template-columns: 48px minmax(0, 1fr) minmax(140px, 0.48fr) 46px;
+  }
+
+  .track-table-panel--with-folder.track-table-panel--with-waveform .track-table__column-headings {
+    grid-template-columns: minmax(0, 1fr) minmax(140px, 0.48fr) 46px;
+  }
+
+  .track-table-panel--with-folder.track-table-panel--with-waveform .track-row__button {
+    grid-template-columns: 48px minmax(0, 1fr) minmax(140px, 0.48fr) 46px;
+  }
+
+  .track-table-panel--with-waveform.track-table-panel--with-share .track-table__column-headings {
+    grid-template-columns: minmax(0, 1fr) minmax(140px, 0.48fr) 46px 36px;
+  }
+
+  .track-table-panel--with-folder.track-table-panel--with-waveform.track-table-panel--with-share .track-table__column-headings {
+    grid-template-columns: minmax(0, 1fr) minmax(140px, 0.48fr) 46px 36px;
+  }
+
+  .track-table-panel--with-folder.track-table-panel--with-waveform .track-table__folder-heading,
+  .track-table-panel--with-folder.track-table-panel--with-waveform .track-row__folder {
+    display: none;
+  }
+
+  .track-row__waveform,
+  .track-table__waveform-heading {
+    display: block;
+  }
+
+  .track-row__waveform {
+    width: 100%;
+    height: 34px;
+    overflow: hidden;
+    border-radius: 2px;
+    background: repeating-linear-gradient(
+      90deg,
+      rgba(114, 116, 116, 0.14) 0 1px,
+      transparent 1px 4px
+    );
+    opacity: 0.62;
+  }
+
+  .track-row__waveform.is-ready {
+    background: transparent;
+  }
+
+  .track-row__waveform canvas {
+    display: block;
+    width: 100%;
+    height: 100%;
+  }
+
+  .track-row.is-active .track-row__waveform {
+    opacity: 0.9;
+  }
+}
+
+@media (min-width: 1320px) {
+  .track-table-panel--with-folder.track-table-panel--with-waveform .track-table__folder-heading,
+  .track-table-panel--with-folder.track-table-panel--with-waveform .track-row__folder {
+    display: block;
+  }
+
+  .track-table-panel--with-folder.track-table-panel--with-waveform .track-table__column-headings {
+    grid-template-columns: minmax(0, 1fr) minmax(105px, 0.35fr) minmax(140px, 0.48fr) 46px;
+  }
+
+  .track-table-panel--with-folder.track-table-panel--with-waveform .track-row__button {
+    grid-template-columns: 48px minmax(0, 1fr) minmax(105px, 0.35fr) minmax(140px, 0.48fr) 46px;
+  }
+
+  .track-table-panel--with-folder.track-table-panel--with-waveform.track-table-panel--with-share .track-table__column-headings {
+    grid-template-columns: minmax(0, 1fr) minmax(105px, 0.35fr) minmax(140px, 0.48fr) 46px 36px;
+  }
 }
 
 .track-table__state {
@@ -708,6 +795,58 @@ input:focus-visible {
   grid-template-columns: 43px minmax(70px, 1fr) 43px;
   align-items: center;
   gap: 12px;
+}
+
+.waveform-scrubber {
+  position: relative;
+  width: 100%;
+  height: 32px;
+  overflow: hidden;
+  border-radius: 3px;
+  background: repeating-linear-gradient(
+    90deg,
+    rgba(103, 107, 109, 0.18) 0 2px,
+    transparent 2px 5px
+  );
+}
+
+.waveform-scrubber__canvas,
+.waveform-scrubber__input {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.waveform-scrubber__canvas {
+  opacity: 0;
+}
+
+.waveform-scrubber__input {
+  z-index: 1;
+  cursor: pointer;
+}
+
+.waveform-scrubber.is-ready .waveform-scrubber__canvas {
+  opacity: 1;
+}
+
+.waveform-scrubber.is-ready .waveform-scrubber__input,
+.waveform-scrubber.is-loading .waveform-scrubber__input {
+  opacity: 0;
+}
+
+.waveform-scrubber.is-ready .waveform-scrubber__input {
+  pointer-events: none;
+}
+
+.waveform-scrubber:focus-within {
+  outline: 2px solid var(--app-blue);
+  outline-offset: 2px;
+}
+
+.waveform-scrubber .range-input:disabled {
+  cursor: default;
 }
 
 .player-bar__time {
@@ -1377,6 +1516,10 @@ input:focus-visible {
     grid-row: 2;
     grid-template-columns: 37px minmax(50px, 1fr) 37px;
     gap: 8px;
+  }
+
+  .waveform-scrubber {
+    height: 28px;
   }
 
   .player-bar__utility {

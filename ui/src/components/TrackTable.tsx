@@ -1,6 +1,7 @@
 import { AudioLines, Check, Play, Share2, Star, TriangleAlert } from "lucide-react";
 
 import { IconButton } from "./IconButton";
+import { TrackWaveformPreview } from "./TrackWaveformPreview";
 import type { TrackItem } from "./view-models";
 
 export interface TrackRowProps<TTrack extends TrackItem = TrackItem> {
@@ -8,6 +9,7 @@ export interface TrackRowProps<TTrack extends TrackItem = TrackItem> {
   isActive?: boolean;
   isPlaying?: boolean;
   showFolder?: boolean;
+  waveformUrl?: string;
   onSelect: (track: TTrack) => void;
   onCopyShareLink?: (track: TTrack) => void;
   shareLinkCopied?: boolean;
@@ -22,6 +24,7 @@ export function TrackRow<TTrack extends TrackItem>({
   shareLinkCopied = false,
   showFolder = false,
   track,
+  waveformUrl,
 }: TrackRowProps<TTrack>) {
   const selectionLabel = isActive
     ? `${track.title}, currently selected${isPlaying ? " and playing" : ""}`
@@ -53,6 +56,9 @@ export function TrackRow<TTrack extends TrackItem>({
           <span className="track-row__folder" title={track.folderName}>
             {track.folderName}
           </span>
+        ) : null}
+        {waveformUrl ? (
+          <TrackWaveformPreview title={track.title} waveformUrl={waveformUrl} />
         ) : null}
         <span
           aria-label={track.isFavorite ? "Favorite track" : "Not favorited"}
@@ -97,6 +103,7 @@ export interface TrackTableProps<TTrack extends TrackItem = TrackItem> {
   onSelectTrack: (track: TTrack) => void;
   onCopyShareLink?: (track: TTrack) => void;
   copiedShareId?: string | null;
+  getWaveformUrl?: (track: TTrack) => string;
   className?: string;
 }
 
@@ -117,6 +124,7 @@ export function TrackTable<TTrack extends TrackItem>({
   isLoading = false,
   isPlaying = false,
   copiedShareId = null,
+  getWaveformUrl,
   onCopyShareLink,
   onSelectTrack,
   showFolder = false,
@@ -132,6 +140,7 @@ export function TrackTable<TTrack extends TrackItem>({
         "track-table-panel",
         showFolder ? "track-table-panel--with-folder" : "",
         showShareAction ? "track-table-panel--with-share" : "",
+        getWaveformUrl ? "track-table-panel--with-waveform" : "",
         className,
       ]
         .filter(Boolean)
@@ -168,6 +177,7 @@ export function TrackTable<TTrack extends TrackItem>({
               shareLinkCopied={track.shareId === copiedShareId}
               showFolder={showFolder}
               track={track}
+              waveformUrl={getWaveformUrl?.(track)}
             />
           ))}
         </ul>

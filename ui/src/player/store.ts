@@ -182,6 +182,30 @@ function selectedFolderForLibrary(
     return library.folders[0]?.id ?? null;
 }
 
+function initialTrackFields(
+    library: Library,
+    state: PlayerDataState,
+): Partial<PlayerDataState> {
+    const folder = library.folders.find((candidate) => candidate.tracks.length > 0);
+    if (!folder) {
+        return clearQueueFields(state);
+    }
+
+    return {
+        ...queueFields(createQueueState(folder.tracks, 0, state.shuffleEnabled)),
+        queueFolderId: folder.id,
+        isPlaying: false,
+        playbackIntent: false,
+        playbackStatus: 'paused',
+        currentTime: 0,
+        duration: 0,
+        seekTarget: 0,
+        seekRequestId: state.seekRequestId + 1,
+        trackRequestId: state.trackRequestId + 1,
+        error: null,
+    };
+}
+
 export const usePlayerStore = create<PlayerStore>()((set, get) => ({
     ...initialState,
 
@@ -223,15 +247,17 @@ export const usePlayerStore = create<PlayerStore>()((set, get) => ({
 
     setLibrary: (library) => {
         const state = get();
+        const firstPlayableFolder = library.folders.find(
+            (folder) => folder.tracks.length > 0,
+        );
         set({
             library,
             libraryStatus: library.folders.length === 0 ? 'empty' : 'ready',
             libraryError: null,
-            selectedFolderId: selectedFolderForLibrary(
-                library,
-                state.selectedFolderId,
-            ),
-            ...clearQueueFields(state),
+            selectedFolderId:
+                firstPlayableFolder?.id ??
+                selectedFolderForLibrary(library, state.selectedFolderId),
+            ...initialTrackFields(library, state),
         });
     },
 
