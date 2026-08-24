@@ -36,6 +36,8 @@ export function LibrarySidebar<TFolder extends FolderNavigationItem>({
     onSelectFavorites,
     status,
 }: LibrarySidebarProps<TFolder>) {
+    const newestFoldersFirst = [...folders].reverse();
+
     return (
         <aside
             className={['library-sidebar', className].filter(Boolean).join(' ')}
@@ -92,7 +94,7 @@ export function LibrarySidebar<TFolder extends FolderNavigationItem>({
                                     No folders found.
                                 </li>
                             ) : null}
-                            {folders.map((folder) => {
+                            {newestFoldersFirst.map((folder) => {
                                 const isActive = folder.id === activeFolderId;
                                 const trackCount = getTrackCount(folder);
 

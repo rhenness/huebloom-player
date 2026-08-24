@@ -38,6 +38,34 @@ describe("player store initial selection", () => {
     expect(state.isPlaying).toBe(false);
     expect(state.playbackStatus).toBe("paused");
   });
+
+  it("loads the most recent playable folder", () => {
+    const multiYearLibrary: Library = {
+      folders: [
+        {
+          id: "2025",
+          name: "2025",
+          tracks: [
+            {
+              title: "Older",
+              filename: "Older.mp3",
+              audioPath: "music/2025/Older.mp3",
+              isFavorite: false,
+              shareId: "ddf2ffec-7e69-4f4e-ae96-af6e65f85e61",
+            },
+          ],
+        },
+        ...library.folders,
+      ],
+    };
+
+    usePlayerStore.getState().setLibrary(multiYearLibrary);
+
+    const state = usePlayerStore.getState();
+    expect(state.selectedFolderId).toBe("2026");
+    expect(state.queueFolderId).toBe("2026");
+    expect(selectCurrentTrack(state)?.title).toBe("First");
+  });
 });
 
 describe("player store end-of-track behavior", () => {

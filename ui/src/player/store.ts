@@ -179,14 +179,25 @@ function selectedFolderForLibrary(
         return currentFolderId;
     }
 
-    return library.folders[0]?.id ?? null;
+    return library.folders[library.folders.length - 1]?.id ?? null;
+}
+
+function mostRecentPlayableFolder(library: Library): LibraryFolder | undefined {
+    for (let index = library.folders.length - 1; index >= 0; index -= 1) {
+        const folder = library.folders[index];
+        if (folder.tracks.length > 0) {
+            return folder;
+        }
+    }
+
+    return undefined;
 }
 
 function initialTrackFields(
     library: Library,
     state: PlayerDataState,
 ): Partial<PlayerDataState> {
-    const folder = library.folders.find((candidate) => candidate.tracks.length > 0);
+    const folder = mostRecentPlayableFolder(library);
     if (!folder) {
         return clearQueueFields(state);
     }
@@ -247,15 +258,13 @@ export const usePlayerStore = create<PlayerStore>()((set, get) => ({
 
     setLibrary: (library) => {
         const state = get();
-        const firstPlayableFolder = library.folders.find(
-            (folder) => folder.tracks.length > 0,
-        );
+        const mostRecentFolder = mostRecentPlayableFolder(library);
         set({
             library,
             libraryStatus: library.folders.length === 0 ? 'empty' : 'ready',
             libraryError: null,
             selectedFolderId:
-                firstPlayableFolder?.id ??
+                mostRecentFolder?.id ??
                 selectedFolderForLibrary(library, state.selectedFolderId),
             ...initialTrackFields(library, state),
         });
