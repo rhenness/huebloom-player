@@ -1066,6 +1066,19 @@
           "shareId": "da04587c-c95c-4229-a18f-4f86c50e924d"
         }
       ]
+    },
+    {
+      "id": "drop-quest",
+      "name": "drop-quest",
+      "tracks": [
+        {
+          "filename": "Project_190 - Drop 1.mp3",
+          "title": "Project_190 - Drop 1",
+          "audioPath": "music/drop-quest/Project_190 - Drop 1.mp3",
+          "isFavorite": false,
+          "shareId": "21675941-ca2a-4076-b320-9c158991cb40"
+        }
+      ]
     }
   ]
 }
