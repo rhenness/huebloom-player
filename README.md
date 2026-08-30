@@ -35,36 +35,46 @@ below. Shared `/share/{shareId}/` pages intentionally bypass the gate.
 
 ## Commands
 
-| Command                 | Purpose                                                                         |
-| ----------------------- | ------------------------------------------------------------------------------- |
-| `npm run build`         | Scan, generate waveforms, compile the UI, then stage `dist/`; requires media URL. |
-| `npm run build:library` | Scan `music/` and update `library.json`.                                        |
-| `npm run build:waveforms` | Generate and cache waveform data for every catalog track.                    |
-| `npm run build:ui`      | Compile `ui/` with Vite into the ignored `.ui-build/` intermediate directory.   |
-| `npm run build:site`    | Stage compiled UI, catalog, and waveforms in `dist/`; requires media URL.       |
-| `npm run scan:check`    | Verify that `library.json` matches the music tree without writing changes.      |
-| `npm run dev:ui`        | Run the local Vite UI server at `http://127.0.0.1:5173/`.                       |
-| `npm run start`         | Alias for `npm run dev:ui`.                                                     |
-| `npm run preview`       | Serve an already staged `dist/` artifact at `http://127.0.0.1:8080/`.           |
-| `npm test`              | Run Jest tests for scanner/staging and player queue behavior.                   |
-| `npm run typecheck`     | Type-check scanner, React UI, and Vite configuration.                           |
+| Command                   | Purpose                                                                           |
+| ------------------------- | --------------------------------------------------------------------------------- |
+| `npm run build`           | Scan, generate waveforms, compile the UI, then stage `dist/`; requires media URL. |
+| `npm run build:library`   | Scan `music/` and update `library.json`.                                          |
+| `npm run build:waveforms` | Generate and cache waveform data for every catalog track.                         |
+| `npm run build:ui`        | Compile `ui/` with Vite into the ignored `.ui-build/` intermediate directory.     |
+| `npm run build:site`      | Stage compiled UI, catalog, and waveforms in `dist/`; requires media URL.         |
+| `npm run scan:check`      | Verify that `library.json` matches the music tree without writing changes.        |
+| `npm run dev:ui`          | Run the local Vite UI server at `http://127.0.0.1:5173/`.                         |
+| `npm run start`           | Alias for `npm run dev:ui`.                                                       |
+| `npm run preview`         | Serve an already staged `dist/` artifact at `http://127.0.0.1:8080/`.             |
+| `npm test`                | Run Jest tests for scanner/staging and player queue behavior.                     |
+| `npm run typecheck`       | Type-check scanner, React UI, and Vite configuration.                             |
 
 ## Music Layout
 
-Place MP3 or WAV files one directory below `music/`:
+Place MP3 or WAV files in directories below `music/`. Directories can be
+nested to any depth:
 
 ```text
 music/
   2024/
     Project_1.mp3
-  2025/
-    Project_60.wav
+    2026/
+        Project_156.mp3
+        drop-quest/
+            Project_190 - Drop 1.mp3
 ```
 
-Each direct child directory of `music/` becomes one library folder. The scanner
-includes only direct `.mp3` and `.wav` files inside those folders,
-case-insensitively. It ignores root-level audio files, nested files and
-directories, unsupported file types, and folders with no eligible tracks.
+Each directory containing a supported track becomes a library folder. Ancestor
+directories are also retained as navigation containers, even when they have no
+direct tracks. Each folder owns only the direct `.mp3` and `.wav` files inside
+it, case-insensitively; descendant tracks are not aggregated into the parent.
+The scanner ignores root-level audio files, unsupported file types, and empty
+directory branches.
+
+The sidebar initially shows top-level folders. Selecting a folder reveals its
+direct children; selecting a nested folder keeps its ancestor branch open. The
+track list and playback queue always contain only the selected folder's direct
+tracks.
 
 ## Waveform generation
 
@@ -74,7 +84,7 @@ an `audiowaveform` 1.10 or newer executable before running `npm run build:wavefo
 or the full production build:
 
 - Windows: download the official executable from the audiowaveform Releases
-    page and put it on `PATH`.
+  page and put it on `PATH`.
 - macOS: run `brew install audiowaveform`.
 - Ubuntu: install `audiowaveform` from `ppa:chris-needham/ppa`.
 
@@ -120,7 +130,17 @@ keeps its existing `title`, `isFavorite`, and `shareId` values. New tracks
 receive a title from the filename, `isFavorite: false`, and a generated UUID
 share ID. Deleted, moved, or renamed paths are removed; a moved or renamed file
 is treated as a new track and receives a new share ID. Folders and tracks are
-written in natural ascending order.
+written in natural ascending path order, with parents before descendants.
+Folder IDs are POSIX paths relative to `music/`, such as
+`2026/drop-quest`; folder names remain the final directory name.
+
+To preserve metadata and public share links during an intentional move, move
+the media files and update the affected folder `id` and track `audioPath`
+values in `library.json` before running the scanner. Keep each track's existing
+`title`, `isFavorite`, and `shareId`. Run `npm run scan:check` to verify the
+migration, then rebuild normally. Deploy the catalog and moved media together
+because the direct media URLs change even though `/share/{shareId}/` links do
+not.
 
 Use the share icon at the end of an individual track row to copy a link such
 as `/share/{shareId}/`. That route opens a
@@ -161,7 +181,7 @@ npm run build
 3. Runs Vite with `base: "./"`, producing relative asset URLs suitable for a
    GitHub Pages project site in `.ui-build/`.
 4. Stages `.ui-build/` into `dist/`, copies `library.json` and validated
-    waveform sidecars, replaces
+   waveform sidecars, replaces
    `config.js` with the supplied media base URL, and generates a static
    `share/{shareId}/index.html` page for every track. This allows direct share
    URLs to work on GitHub Pages without a server-side route rewrite.

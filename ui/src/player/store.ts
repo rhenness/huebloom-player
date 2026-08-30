@@ -185,6 +185,13 @@ function selectedFolderForLibrary(
 function mostRecentPlayableFolder(library: Library): LibraryFolder | undefined {
     for (let index = library.folders.length - 1; index >= 0; index -= 1) {
         const folder = library.folders[index];
+        if (!folder.id.includes('/') && folder.tracks.length > 0) {
+            return folder;
+        }
+    }
+
+    for (let index = library.folders.length - 1; index >= 0; index -= 1) {
+        const folder = library.folders[index];
         if (folder.tracks.length > 0) {
             return folder;
         }
@@ -203,7 +210,9 @@ function initialTrackFields(
     }
 
     return {
-        ...queueFields(createQueueState(folder.tracks, 0, state.shuffleEnabled)),
+        ...queueFields(
+            createQueueState(folder.tracks, 0, state.shuffleEnabled),
+        ),
         queueFolderId: folder.id,
         isPlaying: false,
         playbackIntent: false,

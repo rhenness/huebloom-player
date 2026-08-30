@@ -122,57 +122,77 @@ async function discoverFolders(
         throw new ScanError(`Unable to read music directory: ${String(error)}`);
     }
 
-    const folderEntries = musicEntries.filter((entry) => entry.isDirectory());
+    async function discoverDirectory(
+        folderPath: string,
+    ): Promise<DiscoveredFolder[]> {
+        let entries: Dirent<string>[];
 
-    return Promise.all(
-        folderEntries.map(async (folderEntry) => {
-            const folderPath = path.join(musicRoot, folderEntry.name);
-            let fileEntries: Dirent<string>[];
-
-            try {
-                fileEntries = await readDirectoryEntries(folderPath);
-            } catch (error) {
-                throw new ScanError(
-                    `Unable to read music folder ${toPosixPath(folderPath)}: ${String(error)}`,
-                );
-            }
-
-            const tracks = await Promise.all(
-                fileEntries
-                    .filter(
-                        (entry) =>
-                            entry.isFile() &&
-                            supportedAudioExtensions.has(
-                                path.extname(entry.name).toLowerCase(),
-                            ),
-                    )
-                    .map(async (fileEntry) => {
-                        const audioFilePath = path.join(
-                            folderPath,
-                            fileEntry.name,
-                        );
-                        await assertNotLfsPointer(audioFilePath);
-
-                        return {
-                            filename: fileEntry.name,
-                            title: path.basename(
-                                fileEntry.name,
-                                path.extname(fileEntry.name),
-                            ),
-                            audioPath: toPosixPath(
-                                path.relative(repositoryRoot, audioFilePath),
-                            ),
-                        };
-                    }),
+        try {
+            entries = await readDirectoryEntries(folderPath);
+        } catch (error) {
+            throw new ScanError(
+                `Unable to read music folder ${toPosixPath(folderPath)}: ${String(error)}`,
             );
+        }
 
-            return {
+        const tracks = await Promise.all(
+            entries
+                .filter(
+                    (entry) =>
+                        entry.isFile() &&
+                        supportedAudioExtensions.has(
+                            path.extname(entry.name).toLowerCase(),
+                        ),
+                )
+                .map(async (fileEntry) => {
+                    const audioFilePath = path.join(folderPath, fileEntry.name);
+                    await assertNotLfsPointer(audioFilePath);
+
+                    return {
+                        filename: fileEntry.name,
+                        title: path.basename(
+                            fileEntry.name,
+                            path.extname(fileEntry.name),
+                        ),
+                        audioPath: toPosixPath(
+                            path.relative(repositoryRoot, audioFilePath),
+                        ),
+                    };
+                }),
+        );
+        const descendants = (
+            await Promise.all(
+                entries
+                    .filter((entry) => entry.isDirectory())
+                    .map((entry) =>
+                        discoverDirectory(path.join(folderPath, entry.name)),
+                    ),
+            )
+        ).flat();
+
+        if (tracks.length === 0 && descendants.length === 0) {
+            return [];
+        }
+
+        return [
+            {
                 id: toPosixPath(path.relative(musicRoot, folderPath)),
-                name: folderEntry.name,
+                name: path.basename(folderPath),
                 tracks,
-            };
-        }),
-    );
+            },
+            ...descendants,
+        ];
+    }
+
+    return (
+        await Promise.all(
+            musicEntries
+                .filter((entry) => entry.isDirectory())
+                .map((entry) =>
+                    discoverDirectory(path.join(musicRoot, entry.name)),
+                ),
+        )
+    ).flat();
 }
 
 async function writeLibraryAtomically(

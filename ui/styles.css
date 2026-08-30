@@ -276,6 +276,34 @@ input:focus-visible {
   gap: 6px;
 }
 
+.folder-navigation__list--nested {
+  position: relative;
+  margin: 6px 0 0 24px;
+  padding-left: 12px;
+}
+
+.folder-navigation__list.folder-navigation__list--nested {
+  width: auto;
+  min-width: 0;
+  grid-template-columns: minmax(0, 1fr);
+}
+
+.folder-navigation__list--nested::before {
+  position: absolute;
+  top: 0;
+  bottom: 8px;
+  left: 0;
+  width: 1px;
+  background: rgba(132, 154, 203, 0.22);
+  content: "";
+}
+
+.folder-navigation__list--nested .folder-navigation__item {
+  min-height: 50px;
+  padding-right: 15px;
+  padding-left: 15px;
+}
+
 .folder-navigation__item {
   position: relative;
   display: grid;

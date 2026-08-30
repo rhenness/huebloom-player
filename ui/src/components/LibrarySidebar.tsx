@@ -1,11 +1,9 @@
 import { Folder, FolderOpen, Star } from 'lucide-react';
 
-import type { FolderNavigationItem } from './view-models';
+import { isFolderInSelectedBranch, type LibraryFolderNode } from '../library';
 
-export interface LibrarySidebarProps<
-    TFolder extends FolderNavigationItem = FolderNavigationItem,
-> {
-    folders: readonly TFolder[];
+export interface LibrarySidebarProps {
+    folders: readonly LibraryFolderNode[];
     activeFolderId?: string | null;
     onSelectFolder: (folderId: string) => void;
     appName?: string;
@@ -18,12 +16,8 @@ export interface LibrarySidebarProps<
     id?: string;
 }
 
-function getTrackCount(folder: FolderNavigationItem) {
-    return folder.trackCount ?? folder.tracks?.length ?? 0;
-}
-
 /** The library navigation rail. It has no dependency on playback state. */
-export function LibrarySidebar<TFolder extends FolderNavigationItem>({
+export function LibrarySidebar({
     activeFolderId,
     appName = 'huebloom',
     className,
@@ -35,8 +29,59 @@ export function LibrarySidebar<TFolder extends FolderNavigationItem>({
     onSelectFolder,
     onSelectFavorites,
     status,
-}: LibrarySidebarProps<TFolder>) {
-    const newestFoldersFirst = [...folders].reverse();
+}: LibrarySidebarProps) {
+    function renderFolders(nodes: readonly LibraryFolderNode[]) {
+        return [...nodes].reverse().map((node) => {
+            const { folder } = node;
+            const isActive = folder.id === activeFolderId;
+            const isBranchOpen = isFolderInSelectedBranch(
+                folder.id,
+                activeFolderId ?? null,
+            );
+            const hasChildren = node.children.length > 0;
+            const trackCount = node.totalTrackCount;
+
+            return (
+                <li key={folder.id}>
+                    <button
+                        aria-current={isActive ? 'page' : undefined}
+                        aria-expanded={hasChildren ? isBranchOpen : undefined}
+                        aria-label={`${folder.name}, ${trackCount} ${trackCount === 1 ? 'track' : 'tracks'}`}
+                        className={`folder-navigation__item${isActive ? ' is-active' : ''}${isBranchOpen ? ' is-branch-open' : ''}`}
+                        onClick={() => onSelectFolder(folder.id)}
+                        type="button">
+                        {isBranchOpen ? (
+                            <FolderOpen
+                                aria-hidden="true"
+                                size={23}
+                                strokeWidth={1.7}
+                            />
+                        ) : (
+                            <Folder
+                                aria-hidden="true"
+                                size={23}
+                                strokeWidth={1.7}
+                            />
+                        )}
+                        <span className="folder-navigation__name">
+                            {folder.name}
+                        </span>
+                        <span
+                            aria-hidden="true"
+                            className="folder-navigation__count">
+                            {trackCount}
+                        </span>
+                    </button>
+
+                    {hasChildren && isBranchOpen ? (
+                        <ul className="folder-navigation__list folder-navigation__list--nested">
+                            {renderFolders(node.children)}
+                        </ul>
+                    ) : null}
+                </li>
+            );
+        });
+    }
 
     return (
         <aside
@@ -94,47 +139,7 @@ export function LibrarySidebar<TFolder extends FolderNavigationItem>({
                                     No folders found.
                                 </li>
                             ) : null}
-                            {newestFoldersFirst.map((folder) => {
-                                const isActive = folder.id === activeFolderId;
-                                const trackCount = getTrackCount(folder);
-
-                                return (
-                                    <li key={folder.id}>
-                                        <button
-                                            aria-current={
-                                                isActive ? 'page' : undefined
-                                            }
-                                            aria-label={`${folder.name}, ${trackCount} ${trackCount === 1 ? 'track' : 'tracks'}`}
-                                            className={`folder-navigation__item${isActive ? ' is-active' : ''}`}
-                                            onClick={() =>
-                                                onSelectFolder(folder.id)
-                                            }
-                                            type="button">
-                                            {isActive ? (
-                                                <FolderOpen
-                                                    aria-hidden="true"
-                                                    size={23}
-                                                    strokeWidth={1.7}
-                                                />
-                                            ) : (
-                                                <Folder
-                                                    aria-hidden="true"
-                                                    size={23}
-                                                    strokeWidth={1.7}
-                                                />
-                                            )}
-                                            <span className="folder-navigation__name">
-                                                {folder.name}
-                                            </span>
-                                            <span
-                                                aria-hidden="true"
-                                                className="folder-navigation__count">
-                                                {trackCount}
-                                            </span>
-                                        </button>
-                                    </li>
-                                );
-                            })}
+                            {renderFolders(folders)}
                         </ul>
                     )}
                 </nav>

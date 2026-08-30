@@ -37,13 +37,17 @@ describe('scanLibrary', () => {
         await rm(repositoryRoot, { recursive: true, force: true });
     });
 
-    it('scans direct MP3 and WAV files, ignores unrelated content, and writes a sorted manifest', async () => {
+    it('scans nested MP3 and WAV files, ignores unrelated content, and writes a sorted manifest', async () => {
         await writeFixtureFile(repositoryRoot, 'music/2025/Project_10.mp3');
         await writeFixtureFile(repositoryRoot, 'music/2025/Project_2.MP3');
         await writeFixtureFile(repositoryRoot, 'music/2025/Project_3.WAV');
         await writeFixtureFile(
             repositoryRoot,
             'music/2025/nested/Project_3.mp3',
+        );
+        await writeFixtureFile(
+            repositoryRoot,
+            'music/2025/nested/deeper/Project_4.wav',
         );
         await writeFixtureFile(repositoryRoot, 'music/2025/notes.txt');
         await writeFixtureFile(repositoryRoot, 'music/2025/Project_4.flac');
@@ -110,8 +114,64 @@ describe('scanLibrary', () => {
                         },
                     ],
                 },
+                {
+                    id: '2025/nested',
+                    name: 'nested',
+                    tracks: [
+                        {
+                            filename: 'Project_3.mp3',
+                            title: 'Project_3',
+                            audioPath: 'music/2025/nested/Project_3.mp3',
+                            isFavorite: false,
+                            shareId: expect.stringMatching(
+                                /^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/,
+                            ),
+                        },
+                    ],
+                },
+                {
+                    id: '2025/nested/deeper',
+                    name: 'deeper',
+                    tracks: [
+                        {
+                            filename: 'Project_4.wav',
+                            title: 'Project_4',
+                            audioPath: 'music/2025/nested/deeper/Project_4.wav',
+                            isFavorite: false,
+                            shareId: expect.stringMatching(
+                                /^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/,
+                            ),
+                        },
+                    ],
+                },
             ],
         });
+    });
+
+    it('retains empty ancestor folders that lead to playable descendants', async () => {
+        await writeFixtureFile(
+            repositoryRoot,
+            'music/archive/collection/deep/Track.mp3',
+        );
+        await mkdir(path.join(repositoryRoot, 'music/archive/empty'), {
+            recursive: true,
+        });
+
+        const result = await scanLibrary({ repositoryRoot });
+
+        expect(
+            result.library.folders.map((folder) => ({
+                id: folder.id,
+                audioPaths: folder.tracks.map((track) => track.audioPath),
+            })),
+        ).toEqual([
+            { id: 'archive', audioPaths: [] },
+            { id: 'archive/collection', audioPaths: [] },
+            {
+                id: 'archive/collection/deep',
+                audioPaths: ['music/archive/collection/deep/Track.mp3'],
+            },
+        ]);
     });
 
     it('preserves metadata for unchanged paths and supports no-write checks', async () => {

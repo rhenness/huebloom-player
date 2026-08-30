@@ -138,7 +138,7 @@ export default function SharePage({ shareId }: SharePageProps) {
                 {state.status === 'ready' && state.track && trackUrl ? (
                     <div className="share-card__track">
                         <div aria-hidden="true" className="share-card__artwork">
-              <DefaultArtwork size={100} />
+                            <DefaultArtwork size={100} />
                         </div>
 
                         <p className="share-card__eyebrow">Shared track</p>
@@ -146,7 +146,7 @@ export default function SharePage({ shareId }: SharePageProps) {
 
                         <dl className="share-card__details">
                             <div>
-                                <dt>Year</dt>
+                                <dt>Folder</dt>
                                 <dd>{state.track.folderName}</dd>
                             </div>
                             <div>
@@ -161,7 +161,10 @@ export default function SharePage({ shareId }: SharePageProps) {
                             key={trackUrl}
                             src={trackUrl}
                             trackTitle={state.track.title}
-                            waveformUrl={resolveWaveformUrl(state.track, config)}
+                            waveformUrl={resolveWaveformUrl(
+                                state.track,
+                                config,
+                            )}
                         />
                     </div>
                 ) : null}
