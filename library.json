@@ -1126,6 +1126,13 @@
           "audioPath": "music/2026/drop-quest/Project_190 - Drop 5.mp3",
           "isFavorite": false,
           "shareId": "ec048d24-6c82-40b1-9db0-ed91d257ee61"
+        },
+        {
+          "filename": "Project_190 - Drop 6.mp3",
+          "title": "Project_190 - Drop 6",
+          "audioPath": "music/2026/drop-quest/Project_190 - Drop 6.mp3",
+          "isFavorite": false,
+          "shareId": "ea90363b-4716-47a8-9d4b-85306d3ffa15"
         }
       ]
     }
